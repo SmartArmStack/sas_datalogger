@@ -35,13 +35,16 @@
 
 #include "rosilo_datalogger/rosilo_datalogger_interface.h"
 
-RosiloDataloggerInterface::RosiloDataloggerInterface(ros::NodeHandle& node_handle, int queue_size)
+namespace rosilo
+{
+
+DataloggerInterface::DataloggerInterface(ros::NodeHandle& node_handle, int queue_size)
 {
     sc_save         = node_handle.serviceClient<rosilo_datalogger::Save>("/rosilo_datalogger/save");
     pub_add_value   = node_handle.advertise<rosilo_datalogger::AddValueMsg>("/rosilo_datalogger/addvaluemsg",queue_size);
 }
 
-void RosiloDataloggerInterface::addValueMsg(const std::string& name, const Eigen::VectorXd& value)
+void DataloggerInterface::addValueMsg(const std::string& name, const Eigen::VectorXd& value)
 {
     pub_add_value_msg.value.resize(value.size());
 
@@ -56,7 +59,7 @@ void RosiloDataloggerInterface::addValueMsg(const std::string& name, const Eigen
     pub_add_value.publish( pub_add_value_msg );
 }
 
-void RosiloDataloggerInterface::addValueMsg(const std::string& name, const std::vector<double>& value)
+void DataloggerInterface::addValueMsg(const std::string& name, const std::vector<double>& value)
 {
     pub_add_value_msg.value.resize(value.size());
 
@@ -71,7 +74,7 @@ void RosiloDataloggerInterface::addValueMsg(const std::string& name, const std::
     pub_add_value.publish( pub_add_value_msg );
 }
 
-void RosiloDataloggerInterface::addValueMsg(const std::string& name, const double& value)
+void DataloggerInterface::addValueMsg(const std::string& name, const double& value)
 {
     pub_add_value_msg.value.resize(1);
     pub_add_value_msg.value[0] = value;
@@ -82,7 +85,7 @@ void RosiloDataloggerInterface::addValueMsg(const std::string& name, const doubl
     pub_add_value.publish( pub_add_value_msg );
 }
 
-void RosiloDataloggerInterface::addValueMsg(const std::string& name, const std::string& value)
+void DataloggerInterface::addValueMsg(const std::string& name, const std::string& value)
 {
     pub_add_value_msg.value.resize(0);
     pub_add_value_msg.strvalue = value;
@@ -91,11 +94,11 @@ void RosiloDataloggerInterface::addValueMsg(const std::string& name, const std::
 }
 
 
-void RosiloDataloggerInterface::save(const std::string& filename)
+void DataloggerInterface::save(const std::string& filename)
 {
     sm_save.request.filename = filename;
 
     sc_save.call( sm_save );
 }
 
-
+}

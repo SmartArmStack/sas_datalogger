@@ -44,7 +44,10 @@
 //Eigen
 #include <eigen3/Eigen/Dense>
 
-class RosiloDataloggerInterface
+namespace rosilo
+{
+
+class DataloggerInterface
 {
 private:
     ros::ServiceClient sc_save;
@@ -53,7 +56,7 @@ private:
     ros::Publisher     pub_add_value;
     rosilo_datalogger::AddValueMsg pub_add_value_msg;
 public:
-    RosiloDataloggerInterface(ros::NodeHandle& node_handle, int queue_size);
+    DataloggerInterface(ros::NodeHandle& node_handle, int queue_size);
 
     void addValueMsg(const std::string& name, const Eigen::VectorXd& value);
     void addValueMsg(const std::string& name, const std::vector<double>& value);
@@ -72,5 +75,7 @@ public:
 
     void save(const std::string &filename);
 };
+
+}
 
 #endif
