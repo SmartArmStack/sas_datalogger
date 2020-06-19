@@ -58,20 +58,10 @@ private:
 public:
     DataloggerInterface(ros::NodeHandle& node_handle, int queue_size);
 
-    void addValueMsg(const std::string& name, const Eigen::VectorXd& value);
-    void addValueMsg(const std::string& name, const std::vector<double>& value);
-    void addValueMsg(const std::string& name, const double& value);
-    void addValueMsg(const std::string& name, const std::string& value);
-
-    //Alias for addValueMsg
-    void log(const std::string& name, const Eigen::VectorXd& value)
-    {addValueMsg(name,value);}
-    void log(const std::string& name, const std::vector<double>& value)
-    {addValueMsg(name,value);}
-    void log(const std::string& name, const double& value)
-    {addValueMsg(name,value);}
-    void log(const std::string& name, const std::string& value)
-    {addValueMsg(name,value);}
+    void log(const std::string& name, const Eigen::VectorXd& value);
+    void log(const std::string& name, const std::vector<double>& value);
+    void log(const std::string& name, const double& value);
+    void log(const std::string& name, const std::string& value);
 
     void save(const std::string &filename);
 };
