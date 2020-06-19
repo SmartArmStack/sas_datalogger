@@ -44,7 +44,7 @@ DataloggerInterface::DataloggerInterface(ros::NodeHandle& node_handle, int queue
     pub_add_value   = node_handle.advertise<rosilo_datalogger::AddValueMsg>("/rosilo_datalogger/addvaluemsg",queue_size);
 }
 
-void DataloggerInterface::addValueMsg(const std::string& name, const Eigen::VectorXd& value)
+void DataloggerInterface::log(const std::string& name, const Eigen::VectorXd& value)
 {
     pub_add_value_msg.value.resize(value.size());
 
@@ -59,7 +59,7 @@ void DataloggerInterface::addValueMsg(const std::string& name, const Eigen::Vect
     pub_add_value.publish( pub_add_value_msg );
 }
 
-void DataloggerInterface::addValueMsg(const std::string& name, const std::vector<double>& value)
+void DataloggerInterface::log(const std::string& name, const std::vector<double>& value)
 {
     pub_add_value_msg.value.resize(value.size());
 
@@ -74,7 +74,7 @@ void DataloggerInterface::addValueMsg(const std::string& name, const std::vector
     pub_add_value.publish( pub_add_value_msg );
 }
 
-void DataloggerInterface::addValueMsg(const std::string& name, const double& value)
+void DataloggerInterface::log(const std::string& name, const double& value)
 {
     pub_add_value_msg.value.resize(1);
     pub_add_value_msg.value[0] = value;
@@ -85,7 +85,7 @@ void DataloggerInterface::addValueMsg(const std::string& name, const double& val
     pub_add_value.publish( pub_add_value_msg );
 }
 
-void DataloggerInterface::addValueMsg(const std::string& name, const std::string& value)
+void DataloggerInterface::log(const std::string& name, const std::string& value)
 {
     pub_add_value_msg.value.resize(0);
     pub_add_value_msg.strvalue = value;
