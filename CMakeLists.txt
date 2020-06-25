@@ -68,8 +68,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES rosilo_datalogger
-#  CATKIN_DEPENDS   
+  LIBRARIES ${PROJECT_NAME}
+  CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
 #  DEPENDS system_lib
 )
 
@@ -86,8 +86,10 @@ include_directories(
 )
 
 ## Declare a cpp library
- add_library(rosilo_datalogger
+ add_library(${PROJECT_NAME}
    src/rosilo_datalogger_interface.cpp
  )
+
+add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 

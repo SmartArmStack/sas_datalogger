@@ -1,3 +1,4 @@
+#pragma once
 /*
 # Copyright (c) 2012-2020 Murilo Marques Marinho
 #
@@ -33,9 +34,6 @@
 #
 # ################################################################*/
 
-#ifndef UNB_PLOTTER_HEADER_GUARD
-#define UNB_PLOTTER_HEADER_GUARD
-
 #include <ros/ros.h>
 
 #include <rosilo_datalogger/Save.h>
@@ -68,4 +66,3 @@ public:
 
 }
 
-#endif
