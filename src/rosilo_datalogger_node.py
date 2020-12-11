@@ -26,6 +26,8 @@
 ##############################################################################
 #                                INCLUDES
 ##############################################################################
+import datetime
+
 import rospy
 
 # Scipy imports
@@ -45,13 +47,20 @@ from rosilo_datalogger.msg import AddValueMsg
 def main():
 
     # Initialize Node
-    rospy.init_node('rosilo_datalogger_node')
+    rospy.init_node('rosilo_datalogger_node', disable_signals=True)
 
     # Initialize object
     rosilo_datalogger = RosiloDatalogger()
 
-    # Create main loop
-    rospy.spin()
+    try:
+        # Create main loop
+        rospy.spin()
+    except KeyboardInterrupt:
+        pass
+
+    filename = '{date:%Y_%m_%d_%H_%M_%S}.mat'.format(date=datetime.datetime.now())
+    print("rosilo_datalogger_node::Saving datalog to filename = '{}'.".format(filename))
+    rosilo_datalogger.save(filename)
 
 ##############################################################################
 #                            CLASS Plot Dataholder
@@ -91,12 +100,7 @@ class RosiloDatalogger:
         # Initialize subscribers
         self.subscriber_addvalue = rospy.Subscriber("/rosilo_datalogger/addvaluemsg", AddValueMsg, self.AddValueMsgCallback)
 
-    ###########################################################################
-    #                     SERVICE SERVER CALLBACK FUNCTIONS
-    ###########################################################################
-
-    def SaveCallback(self, req):
-
+    def save(self, filename):
         # Create dictionary
         data = {}
 
@@ -105,14 +109,18 @@ class RosiloDatalogger:
             data[str(variable.name)] = variable.values
 
         # Save
-        sio.savemat(req.filename, data)
-
-        rospy.loginfo('RosiloDatalogger::SaveCallback - Data saved in file ' + str(req.filename))
+        sio.savemat(filename, data)
 
         self.variables = []  # Clear buffers
         self.currentvariablenames = []  # Clear buffers
         self.numberofvariables = 0
 
+    ###########################################################################
+    #                     SERVICE SERVER CALLBACK FUNCTIONS
+    ###########################################################################
+
+    def SaveCallback(self, req):
+        self.save(req.filename)
         return SaveResponse(True)
 
     ###########################################################################
@@ -151,7 +159,4 @@ class RosiloDatalogger:
 
 
 if __name__ == '__main__':
-    try:
-        main()
-    except rospy.ROSInterruptException:
-        pass
+    main()
