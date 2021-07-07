@@ -22,7 +22,7 @@ class DataloggerInterface:
             # If the array is (1, y)
             try:
                 (x, y) = value.shape
-                msg.value = value.reshape(max(x,y))
+                msg.value = value.reshape(max(x, y))
             except ValueError as e:
                 pass
             # If the array is (x,)
