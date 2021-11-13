@@ -2,20 +2,20 @@
 
 # Copyright (c) 2012-2020 Murilo Marques Marinho
 #
-#    This file is part of rosilo_datalogger.
+#    This file is part of sas_datalogger.
 #
-#    rosilo_datalogger is free software: you can redistribute it and/or modify
+#    sas_datalogger is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Lesser General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    rosilo_datalogger is distributed in the hope that it will be useful,
+#    sas_datalogger is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Lesser General Public License for more details.
 #
 #    You should have received a copy of the GNU Lesser General Public License
-#    along with rosilo_datalogger.  If not, see <https://www.gnu.org/licenses/>.
+#    along with sas_datalogger.  If not, see <https://www.gnu.org/licenses/>.
 #
 # ################################################################
 #
@@ -34,10 +34,10 @@ import rospy
 import scipy.io as sio
 
 # Services
-from rosilo_datalogger.srv import Save
-from rosilo_datalogger.srv import SaveResponse
+from sas_datalogger.srv import Save
+from sas_datalogger.srv import SaveResponse
 
-from rosilo_datalogger.msg import AddValueMsg
+from sas_datalogger.msg import AddValueMsg
 
 ##############################################################################
 #                            NODE MAIN ROUTINE
@@ -47,10 +47,10 @@ from rosilo_datalogger.msg import AddValueMsg
 def main():
 
     # Initialize Node
-    rospy.init_node('rosilo_datalogger_node', disable_signals=True)
+    rospy.init_node('sas_datalogger_node', disable_signals=True)
 
     # Initialize object
-    rosilo_datalogger = RosiloDatalogger()
+    sas_datalogger = RosiloDatalogger()
 
     try:
         # Create main loop
@@ -59,8 +59,8 @@ def main():
         pass
 
     filename = '{date:%Y_%m_%d_%H_%M_%S}.mat'.format(date=datetime.datetime.now())
-    print("rosilo_datalogger_node::Saving datalog to filename = '{}'.".format(filename))
-    rosilo_datalogger.save(filename)
+    print("sas_datalogger_node::Saving datalog to filename = '{}'.".format(filename))
+    sas_datalogger.save(filename)
 
 ##############################################################################
 #                            CLASS Plot Dataholder
@@ -95,10 +95,10 @@ class RosiloDatalogger:
         self.numberofvariables = 0
 
         # Initialize service servers
-        self.service_server_save = rospy.Service('/rosilo_datalogger/save', Save, self.SaveCallback )
+        self.service_server_save = rospy.Service('/sas_datalogger/save', Save, self.SaveCallback )
 
         # Initialize subscribers
-        self.subscriber_addvalue = rospy.Subscriber("/rosilo_datalogger/addvaluemsg", AddValueMsg, self.AddValueMsgCallback)
+        self.subscriber_addvalue = rospy.Subscriber("/sas_datalogger/addvaluemsg", AddValueMsg, self.AddValueMsgCallback)
 
     def save(self, filename):
         # Create dictionary
