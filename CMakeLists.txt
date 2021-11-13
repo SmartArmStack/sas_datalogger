@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(rosilo_datalogger)
+project(sas_datalogger)
 
 #Add custom (non compiling) targets so launch scripts and python files show up in QT Creator's project view.
 file(GLOB_RECURSE EXTRA_FILES */*)
@@ -89,7 +89,7 @@ include_directories(
 
 ## Declare a cpp library
  add_library(${PROJECT_NAME}
-   src/rosilo_datalogger_interface.cpp
+   src/sas_datalogger_interface.cpp
  )
 
 add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -105,7 +105,7 @@ add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EX
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
  install(PROGRAMS
-   scripts/rosilo_datalogger_node.py
+   scripts/sas_datalogger_node.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
 

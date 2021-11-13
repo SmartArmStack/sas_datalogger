@@ -2,9 +2,9 @@
 import rospy
 import time
 import numpy as np
-from rosilo_datalogger import DataloggerInterface
+from sas_datalogger import DataloggerInterface
 
-rospy.init_node('rosilo_datalogger_interface_test', disable_signals=True)
+rospy.init_node('sas_datalogger_interface_test', disable_signals=True)
 
 datalogger = DataloggerInterface(20)
 while not rospy.is_shutdown():
