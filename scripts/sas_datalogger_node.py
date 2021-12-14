@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# Copyright (c) 2012-2020 Murilo Marques Marinho
+# Copyright (c) 2012-2021 Murilo Marques Marinho
 #
 #    This file is part of sas_datalogger.
 #
@@ -39,13 +39,13 @@ from sas_datalogger.srv import SaveResponse
 
 from sas_datalogger.msg import AddValueMsg
 
+
 ##############################################################################
 #                            NODE MAIN ROUTINE
 ##############################################################################
 
 
 def main():
-
     # Initialize Node
     rospy.init_node('sas_datalogger_node', disable_signals=True)
 
@@ -62,24 +62,10 @@ def main():
     print("sas_datalogger_node::Saving datalog to filename = '{}'.".format(filename))
     sas_datalogger.save(filename)
 
-##############################################################################
-#                            CLASS Plot Dataholder
-##############################################################################
-
-
-class Variable:
-
-    def __init__(self, name, vartype, size):
-
-        self.name = name
-        self.vartype = vartype
-        self.size = size
-        self.values = []
 
 ##############################################################################
 #                            CLASS RosiloDatalogger
 ##############################################################################
-
 
 class RosiloDatalogger:
 
@@ -90,30 +76,21 @@ class RosiloDatalogger:
     def __init__(self):
 
         # Setting status variables
-        self.variables = []  # A list of variables
-        self.currentvariablenames = []
-        self.numberofvariables = 0
+        self.data = {}
 
         # Initialize service servers
-        self.service_server_save = rospy.Service('/sas_datalogger/save', Save, self.SaveCallback )
+        self.service_server_save = rospy.Service('/sas_datalogger/save', Save, self.SaveCallback)
 
         # Initialize subscribers
-        self.subscriber_addvalue = rospy.Subscriber("/sas_datalogger/addvaluemsg", AddValueMsg, self.AddValueMsgCallback)
+        self.subscriber_addvalue = rospy.Subscriber("/sas_datalogger/addvaluemsg", AddValueMsg,
+                                                    self.AddValueMsgCallback)
 
     def save(self, filename):
-        # Create dictionary
-        data = {}
-
-        # Add values
-        for variable in self.variables:
-            data[str(variable.name)] = variable.values
-
         # Save
-        sio.savemat(filename, data)
+        sio.savemat(filename, self.data)
 
-        self.variables = []  # Clear buffers
-        self.currentvariablenames = []  # Clear buffers
-        self.numberofvariables = 0
+        # Clear buffer
+        self.data = {}
 
     ###########################################################################
     #                     SERVICE SERVER CALLBACK FUNCTIONS
@@ -129,29 +106,20 @@ class RosiloDatalogger:
     # ADDVALUE CALLBACK
     def AddValueMsgCallback(self, req):
 
-        # Check if name is within existing variables
-        if not (req.name in self.currentvariablenames):
-            self.numberofvariables = self.numberofvariables+1
-
-            variable = Variable(req.name, str("float"), len(req.value))
-            self.variables.append(variable)
-
-            # Store the existing variable names
-            self.currentvariablenames = set(variable.name for variable in self.variables)
-
-        # Search list for the right object
-        for x in self.variables:
-            if x.name == req.name:
-                variable = x
-                break
-
-        if len(req.value) > 0:
-            # Update data values
-            variable.values.append(req.value)
+        # Initialize list for a given variable
+        if req.name in self.data:
+            pass
         else:
-            variable.values.append(req.strvalue)
+            self.data[req.name] = []
+
+        # Append value to dictionary, string or not
+        if len(req.value) > 0:
+            self.data[req.name].append(req.value)
+        else:
+            self.data[req.name].append(req.strvalue)
 
         return
+
 
 ##############################################################################
 #                          RUNNING THE MAIN ROUTINE
