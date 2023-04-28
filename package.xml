@@ -7,13 +7,19 @@
   <maintainer email="murilomarinho@ieee.org">murilo</maintainer>
   <license>TODO: License declaration</license>
 
+  <depend>sas_common</depend>
+  <depend>sas_core</depend>
+  <depend>sas_msgs</depend>
+  <depend>rclcpp</depend>
+
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
   <test_depend>ament_pep257</test_depend>
   <test_depend>python3-pytest</test_depend>
-  <test_depend>sas_msgs</test_depend>
+
+
 
   <export>
-    <build_type>ament_python</build_type>
+    <build_type>ament_cmake</build_type>
   </export>
 </package>
