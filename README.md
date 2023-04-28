@@ -15,7 +15,7 @@ Call with `ros2 run sas_datalogger <NODE_NAME>`.
 |------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
 | `sas_datalogger_node.py`              | A convenience wrapper contaning all conversion headers.                                                                       |
 
-#### Example
+### Example
 
 Running the example:
 
@@ -23,7 +23,7 @@ Running the example:
 ros2 launch sas_conversions sas_datalogger_client_example.py
 ```
 
-##### Main points in the example's source code
+#### Main points in the example's source code
 
 Use the appropriate header
 
