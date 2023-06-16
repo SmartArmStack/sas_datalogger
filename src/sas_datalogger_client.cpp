@@ -27,7 +27,7 @@
 namespace sas
 {
 
-DataloggerClient::DataloggerClient(const rclcpp::Node::SharedPtr &node, int queue_size):
+DataloggerClient::DataloggerClient(const rclcpp::Node::SharedPtr& node, const size_t& queue_size):
     sas::Object("sas::DataloggerClient")
 {
     //sc_save         = node.serviceClient<sas_datalogger::Save>("/sas_datalogger/save");

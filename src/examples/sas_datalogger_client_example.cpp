@@ -50,36 +50,47 @@ int main(int argc,char** argv)
 
     try
     {
-        sas::DataloggerClient datalogger_client(node,10);
+        sas::DataloggerClient datalogger_client(node); //If you're storing more than 100 values at each loop, this might need adjustment
 
-        RCLCPP_WARN_STREAM_ONCE(node->get_logger(), "RUN THIS EXAMPLE WITH THE LAUNCH FILE, NOT THE BINARY DIRECTLY.");
+        RCLCPP_WARN_STREAM_ONCE(node->get_logger(), "*******RUN THIS EXAMPLE WITH THE LAUNCH FILE, NOT THE BINARY DIRECTLY.*******");
+        RCLCPP_WARN_STREAM_ONCE(node->get_logger(), "Run with 'ros2 launch sas_datalogger sas_datalogger_client_example_launch.py'");
+        RCLCPP_WARN_STREAM_ONCE(node->get_logger(), "*****************************************************************************");
 
         RCLCPP_INFO_STREAM_ONCE(node->get_logger(), "Waiting for a connection with sas_datalogger...");
-        while( (not datalogger_client.is_enabled()) and (rclcpp::ok()) )
+        while( (not datalogger_client.is_enabled()) and (not kill_this_process))
         {
             std::this_thread::sleep_for(std::chrono::microseconds(100));
             rclcpp::spin_some(node);
         }
-        RCLCPP_INFO_STREAM_ONCE(node->get_logger(), "Connected with sas_datalogger.");
+        RCLCPP_INFO_STREAM_ONCE(node->get_logger(), "Connected to sas_datalogger.");
 
         RCLCPP_INFO_STREAM_ONCE(node->get_logger(), "Logging started...");
 
-        MatrixXd A(3,3); A << 1,2,3,4,5,6,7,8,9;
-        datalogger_client.log("A",A);
+        RCLCPP_INFO_STREAM_ONCE(node->get_logger(), "Logging each value 5 times...");
 
-        VectorXd v(5); v << 1,5,10,15,20;
-        datalogger_client.log("v",v);
+        for (auto i = 0; i < 5; i++)
+        {
+            MatrixXd A(3,4); A << 1,2,3,4,5,6,7,8,9,10,11,12;
+            datalogger_client.log("A",A);
 
-        std::vector<double> std_v = {2,4,6,8,10};
-        datalogger_client.log("std_v",std_v);
+            VectorXd v(5); v << 1,5,10,15,20;
+            datalogger_client.log("v",v);
 
-        datalogger_client.log("value_double",5);
+            std::vector<double> std_v = {2,4,6,8,10};
+            datalogger_client.log("std_v",std_v);
 
-        datalogger_client.log("value_string","Hello world!");
+            datalogger_client.log("value_double",5);
+
+            datalogger_client.log("value_string","Hello world!");
+        }
 
         RCLCPP_INFO_STREAM_ONCE(node->get_logger(), "Logging ended. Close the `sas_datalogger_node` and check the resulting .mat file.");
 
-        rclcpp::spin_some(node);
+        while(not kill_this_process)
+        {
+            std::this_thread::sleep_for(std::chrono::microseconds(100));
+            rclcpp::spin_some(node);
+        }
     }
     catch (const std::exception& e)
     {

@@ -43,7 +43,7 @@ private:
 
     rclcpp::Publisher<sas_msgs::msg::LogDatum>::SharedPtr publisher_log_;
 public:
-    DataloggerClient(const rclcpp::Node::SharedPtr& node, int queue_size);
+    DataloggerClient(const rclcpp::Node::SharedPtr& node, const size_t &queue_size=100);
 
     bool is_enabled() const;
 
