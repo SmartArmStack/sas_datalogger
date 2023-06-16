@@ -93,6 +93,7 @@ install(TARGETS _${PROJECT_NAME}
 install(PROGRAMS
   scripts/sas_datalogger_node.py
   scripts/sas_datalogger_client_example_result_check.py
+  scripts/sas_datalogger_client_example_py.py
   DESTINATION lib/${PROJECT_NAME}
 )
 ##END## PYTHON EXECUTABLES #####
