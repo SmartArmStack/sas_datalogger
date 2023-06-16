@@ -34,7 +34,9 @@ PYBIND11_MODULE(_sas_datalogger, m) {
 
     py::class_<DC> dc(m, "DataloggerClient");
 
-    dc.def(py::init<const std::shared_ptr<rclcpp::Node>&,const size_t&>());
+    dc.def(py::init<const std::shared_ptr<rclcpp::Node>&,const size_t&>(),
+           py::arg("node"),
+           py::arg("queue_size") = 100);
     dc.def("is_enabled",&DC::is_enabled,"Returns true if the client is connected to the datalogger server, false otherwise.");
 
     dc.def("log",py::overload_cast<const std::string&, const MatrixXd&>(&DC::log),"Logs a matrix.");
