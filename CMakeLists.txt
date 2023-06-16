@@ -81,7 +81,7 @@ target_include_directories(_${PROJECT_NAME}
 
 target_compile_definitions(_${PROJECT_NAME} PRIVATE IS_SAS_PYTHON_BUILD)
 # https://github.com/pybind/pybind11/issues/387
-target_link_libraries(_${PROJECT_NAME} PRIVATE ${PROJECT_NAME} -ldqrobotics)
+target_link_libraries(_${PROJECT_NAME} PRIVATE ${PROJECT_NAME})
 
 install(TARGETS _${PROJECT_NAME}
   DESTINATION "${PYTHON_INSTALL_DIR}/${PROJECT_NAME}"
