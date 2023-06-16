@@ -3,7 +3,7 @@
 Log data in your CPP and Python nodes through `ROS2` into a `.mat` file.
 
 - [X] `rclcpp` Native implementation.
-- [ ] `rclpy` TODO as a `pybind11` wrapper.
+- [X] `rclpy` `pybind11` wrapper.
 
 ## Main goodies
 
@@ -31,20 +31,15 @@ ros2 launch sas_conversions sas_datalogger_client_example.py
 ros2 run sas_datalogger sas_datalogger_client_example_result_check.py sas_log_2023_06_16_12_40_25.mat
 ```
 
-#### Main points in the example's source code
+#### CPP Usage
 
-1. Use the appropriate header
+Refer to the example `src/examples/sas_datalogger_client_example.cpp`.
 
-https://github.com/SmartArmStack/sas_datalogger/blob/f8654d0803efc09cde006feec5a640e8b1d459b3/src/examples/sas_datalogger_client_example.cpp#L27
+https://github.com/SmartArmStack/sas_datalogger/blob/c18667d55c1293dbfcb3491b4e17e2ba095620dc/src/examples/sas_datalogger_client_example.cpp#L25-102
 
-2. Instantiate an object from the datalogger class
+    
+#### Python Usage
 
-https://github.com/SmartArmStack/sas_datalogger/blob/f8654d0803efc09cde006feec5a640e8b1d459b3/src/examples/sas_datalogger_client_example.cpp#L53
+Refer to the example scripts/sas_datalogger_client_example_py.py`.
 
-3. Wait for connection with the `sas_datalogger_node.py`
-
-https://github.com/SmartArmStack/sas_datalogger/blob/f8654d0803efc09cde006feec5a640e8b1d459b3/src/examples/sas_datalogger_client_example.cpp#L58-L62
-
-4. Log different types of data as follows
-
-https://github.com/SmartArmStack/sas_datalogger/blob/f8654d0803efc09cde006feec5a640e8b1d459b3/src/examples/sas_datalogger_client_example.cpp#L67-L78               
+https://github.com/SmartArmStack/sas_datalogger/blob/c18667d55c1293dbfcb3491b4e17e2ba095620dc/scripts/sas_datalogger_client_example_py.py#L27-82
