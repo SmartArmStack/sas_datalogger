@@ -7,7 +7,6 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(ament_cmake_python REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sas_core REQUIRED)
 find_package(sas_common REQUIRED)
@@ -69,6 +68,7 @@ install(TARGETS
 ##### PYTHON EXECUTABLES #####
 install(PROGRAMS
   scripts/sas_datalogger_node.py
+  scripts/sas_datalogger_client_example_result_check.py
   DESTINATION lib/${PROJECT_NAME}
 )
 ##END## PYTHON EXECUTABLES #####

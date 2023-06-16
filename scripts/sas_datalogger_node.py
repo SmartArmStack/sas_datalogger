@@ -21,14 +21,17 @@
 #
 #   Author: Murilo M. Marinho, email: murilomarinho@ieee.org
 #
-# ################################################################*/
+# ################################################################
 
 import datetime
 import time
 
+import numpy
+import scipy.io as sio
+
 import rclpy
 from rclpy.node import Node
-import scipy.io as sio
+
 from sas_msgs.msg import LogDatum
 
 
@@ -40,6 +43,7 @@ def main(args=None):
                 rclpy.spin_once(sas_datalogger, timeout_sec=0)
                 time.sleep(0.001)  # TODO use sas::Clock instead, now not available
     except KeyboardInterrupt:
+        print("sas_datalogger_node ended by user with CTRL+C.")
         pass
 
 
@@ -53,7 +57,7 @@ class SASDatalogger(Node):
             LogDatum,
             "/sas_datalogger/log",
             self.log_callback,
-            1)
+            100) #  If you're storing more than 100 values at each loop, this might need adjustment
 
     def __enter__(self):
         return self
@@ -77,7 +81,10 @@ class SASDatalogger(Node):
 
         # Append value to dictionary, string or not
         if len(msg.value) > 0:
-            self.data[msg.name].append(msg.value)
+            if len(msg.layout) == 2:
+                self.data[msg.name].append(numpy.asarray(msg.value).reshape(msg.layout))
+            else:
+                self.data[msg.name].append(msg.value)
         else:
             self.data[msg.name].append(msg.strvalue)
 
