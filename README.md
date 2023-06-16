@@ -40,6 +40,6 @@ https://github.com/SmartArmStack/sas_datalogger/blob/c18667d55c1293dbfcb3491b4e1
     
 #### Python Usage
 
-Refer to the example scripts/sas_datalogger_client_example_py.py`.
+Refer to the example `scripts/sas_datalogger_client_example_py.py`.
 
 https://github.com/SmartArmStack/sas_datalogger/blob/c18667d55c1293dbfcb3491b4e17e2ba095620dc/scripts/sas_datalogger_client_example_py.py#L27-L82
