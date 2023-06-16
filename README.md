@@ -35,11 +35,11 @@ ros2 run sas_datalogger sas_datalogger_client_example_result_check.py sas_log_20
 
 Refer to the example `src/examples/sas_datalogger_client_example.cpp`.
 
-https://github.com/SmartArmStack/sas_datalogger/blob/c18667d55c1293dbfcb3491b4e17e2ba095620dc/src/examples/sas_datalogger_client_example.cpp#L25-102
+https://github.com/SmartArmStack/sas_datalogger/blob/c18667d55c1293dbfcb3491b4e17e2ba095620dc/src/examples/sas_datalogger_client_example.cpp#L25-L102
 
     
 #### Python Usage
 
 Refer to the example scripts/sas_datalogger_client_example_py.py`.
 
-https://github.com/SmartArmStack/sas_datalogger/blob/c18667d55c1293dbfcb3491b4e17e2ba095620dc/scripts/sas_datalogger_client_example_py.py#L27-82
+https://github.com/SmartArmStack/sas_datalogger/blob/c18667d55c1293dbfcb3491b4e17e2ba095620dc/scripts/sas_datalogger_client_example_py.py#L27-L82
