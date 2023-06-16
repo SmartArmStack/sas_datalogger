@@ -3,7 +3,7 @@
 Log data in your CPP and Python nodes through `ROS2` into a `.mat` file.
 
 - [X] `rclcpp`. Native implementation.
-- [X] `rclpy`. `pybind11` wrapper.
+- [X] `rclpy` with a `pybind11` wrapper.
 
 ## Main goodies
 
