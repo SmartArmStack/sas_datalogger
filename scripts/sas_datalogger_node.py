@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# Copyright (c) 2012-2023 Murilo Marques Marinho
+# Copyright (c) 2012-2025 Murilo Marques Marinho
 #
 #    This file is part of sas_datalogger.
 #
@@ -37,14 +37,15 @@ from sas_msgs.msg import LogDatum
 
 def main(args=None):
     try:
-        rclpy.init(args=args, signal_handler_options=rclpy.SignalHandlerOptions.NO)
+        rclpy.init(args=args)
         with SASDatalogger(node_name="sas_datalogger_node") as sas_datalogger:
-            while rclpy.ok():
-                rclpy.spin_once(sas_datalogger, timeout_sec=0)
-                time.sleep(0.001)  # TODO use sas::Clock instead, now not available
+            print("sas_datalogger_node ready. End it with CTRL+C.")
+            rclpy.spin(sas_datalogger)
     except KeyboardInterrupt:
         print("sas_datalogger_node ended by user with CTRL+C.")
         pass
+    except Exception as e:
+        print(e)
 
 
 class SASDatalogger(Node):
@@ -79,7 +80,7 @@ class SASDatalogger(Node):
         else:
             self.data[msg.name] = []
 
-        # Append value to dictionary, string or not
+        # Append value to dictionary
         if len(msg.value) > 0:
             if len(msg.layout) == 2:
                 self.data[msg.name].append(numpy.asarray(msg.value).reshape(msg.layout))
