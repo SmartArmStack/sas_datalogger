@@ -20,7 +20,7 @@ Call with `ros2 run sas_datalogger <NODE_NAME>`.
 1. Run the example
 
 ```commandline
-ros2 launch sas_conversions sas_datalogger_client_example.py
+ros2 launch sas_datalogger sas_datalogger_client_example_launch.py
 ```
 
 2. Press `CTRL+C` to end both nodes. The `.mat` file will be saved in the current directory, i.e. the one in which you ran the launch file.
