@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# Copyright (c) 2012-2025 Murilo Marques Marinho
+# Copyright (c) 2012-2026 Murilo Marques Marinho
 #
 #    This file is part of sas_datalogger.
 #
