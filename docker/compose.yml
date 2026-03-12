@@ -1,0 +1,10 @@
+services:
+  sas_datalogger:
+    build: .
+    volumes:
+      - ../../sas_datalogger:/root/sas_datalogger_devel/src/sas_datalogger
+    command: /bin/bash -c "
+      cd /root/sas_datalogger_devel/src/
+      && ls .
+      && colcon build
+      && source install/setup.bash"
