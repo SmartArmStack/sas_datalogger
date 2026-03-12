@@ -24,7 +24,6 @@
 # ################################################################
 
 import datetime
-import time
 
 import numpy
 import scipy.io as sio
@@ -36,16 +35,16 @@ from sas_msgs.msg import LogDatum
 
 
 def main(args=None):
-    try:
-        rclpy.init(args=args)
-        with SASDatalogger(node_name="sas_datalogger_node") as sas_datalogger:
-            print("sas_datalogger_node ready. End it with CTRL+C.")
+
+    rclpy.init(args=args)
+    with SASDatalogger(node_name="sas_datalogger_node") as sas_datalogger:
+        print("sas_datalogger_node ready. End it with CTRL+C.")
+        try:
             rclpy.spin(sas_datalogger)
-    except KeyboardInterrupt:
-        print("sas_datalogger_node ended by user with CTRL+C.")
-        pass
-    except Exception as e:
-        print(e)
+        except KeyboardInterrupt:
+            print("sas_datalogger_node ended by user with CTRL+C.")
+        except Exception as e:
+            print(e)
 
 
 class SASDatalogger(Node):
@@ -65,8 +64,8 @@ class SASDatalogger(Node):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         filename = 'sas_log_{date:%Y_%m_%d_%H_%M_%S}.mat'.format(date=datetime.datetime.now())
-        self.get_logger().info("Saving log to filename = '{}'.".format(filename))
-        self.save(filename)
+        print("Saving log to filename = '{}'.".format(filename))
+        sio.savemat(filename, self.data)
 
     def save(self, filename: str):
         sio.savemat(filename, self.data)

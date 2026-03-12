@@ -24,24 +24,27 @@
 # ################################################################
 
 import os
-import sys
 import scipy.io
-from pathlib import Path
+import glob
 
-current_working_directory = os.getcwd()
+def main():
+    current_working_directory = os.getcwd()
+    filenames = glob.glob(rf"{current_working_directory}/*")
+    print(filenames)
+    filenames = glob.glob(rf"{current_working_directory}/*.mat")
+    absolute_file_path = filenames[0]
+    print("Try to open file {}".format(absolute_file_path))
+    mat = scipy.io.loadmat(absolute_file_path)
 
-filename = str(sys.argv[1])
+    if mat is not None:
+        for key in mat:
+            print("For element = {}, the stored value was {}".format(key, mat[key]))
+            try:
+                print("With shape = {}".format(mat[key].shape))
+            except Exception:
+                pass
+    else:
+        print("Error loading mat file, or mat file empty")
 
-absolute_file_path = Path(current_working_directory)/Path(filename)
-print("Try to open file {}".format(absolute_file_path))
-mat = scipy.io.loadmat(absolute_file_path)
-
-if mat is not None:
-    for key in mat:
-        print("For element = {}, the stored value was {}".format(key, mat[key]))
-        try:
-            print("With shape = {}".format(mat[key].shape))
-        except Exception:
-            pass
-else:
-    print("Error loading mat file, or mat file empty")
+if __name__ == "__main__":
+    main()

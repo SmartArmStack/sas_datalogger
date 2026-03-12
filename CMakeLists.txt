@@ -89,24 +89,30 @@ install(TARGETS _${PROJECT_NAME}
 
 ##END## PYBIND11 LIBRARY #####
 
-##### PYTHON EXECUTABLES #####
-install(PROGRAMS
-  scripts/sas_datalogger_node.py
-  scripts/sas_datalogger_client_example_result_check.py
-  scripts/sas_datalogger_client_example_py.py
-  DESTINATION lib/${PROJECT_NAME}
-)
-##END## PYTHON EXECUTABLES #####
-
-##### LAUNCH FILES #####
-
+########################
+# Launch Block [BEGIN] #
+# vvvvvvvvvvvvvvvvvvvv #
+# According to https://github.com/SmartArmStack/sas_robot_driver/blob/ros2/CMakeLists.txt
 install(DIRECTORY
-  launch
-  DESTINATION share/${PROJECT_NAME}/
+        launch
+        DESTINATION share/${PROJECT_NAME}/
 )
+# ^^^^^^^^^^^^^^^^^^ #
+# Launch Block [END] #
+######################
 
-##END## LAUNCH FILES #####
-
+#########################
+# Scripts Block [BEGIN] #
+# vvvvvvvvvvvvvvvvvvvvv #
+# https://ros2-tutorial.readthedocs.io/en/latest/
+install(DIRECTORY
+        scripts/
+        FILE_PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
+        DESTINATION lib/${PROJECT_NAME}
+)
+# ^^^^^^^^^^^^^^^^^^^ #
+# Scripts Block [END] #
+#######################
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

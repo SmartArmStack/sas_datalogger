@@ -1,10 +1,11 @@
 services:
   sas_datalogger:
     build: .
+    environment:
+      TIMEOUT: 20
     volumes:
       - ../../sas_datalogger:/root/sas_datalogger_devel/src/sas_datalogger
     command: /bin/bash -c "
-      cd /root/sas_datalogger_devel/src/
-      && ls .
-      && colcon build
-      && source install/setup.bash"
+      cd /root/sas_datalogger_devel/src/sas_datalogger/docker
+      && chmod +x test.sh 
+      && ./test.sh"
