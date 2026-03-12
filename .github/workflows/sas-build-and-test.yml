@@ -1,0 +1,7 @@
+name: Build
+
+on: [push, pull_request]
+
+jobs:
+  sas_build_and_test:
+    uses: SmartArmStack/.github/workflows/sas-isolated-package-build.yml
