@@ -4,4 +4,4 @@ on: [push, pull_request]
 
 jobs:
   sas_build_and_test:
-    uses: ./.github/workflows/sas-isolated-package-build.yml
+    uses: SmartArmStack/smart_arm_stack_ROS2/.github/workflows/sas-isolated-package-build.yml@jazzy
