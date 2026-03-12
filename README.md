@@ -11,9 +11,9 @@ Log data in your CPP and Python nodes through `ROS2` into a `.mat` file.
 
 Call with `ros2 run sas_datalogger <NODE_NAME>`.
 
-| Node name                             | Description                                                                                                                   |
-|---------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
-| `sas_datalogger_node.py`              | A convenience wrapper containing all conversion headers.                                                                       |
+| Node name                | Description                                              |
+|--------------------------|----------------------------------------------------------|
+| `sas_datalogger_node.py` | A convenience wrapper containing all conversion headers. |
 
 ### Example
 
