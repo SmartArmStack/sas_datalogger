@@ -1,9 +1,6 @@
 # sas_datalogger
 
-Log data in your CPP and Python nodes through `ROS2` into a `.mat` file.
-
-- [X] `rclcpp`. Native implementation.
-- [X] `rclpy` with a `pybind11` wrapper.
+Log data through `ROS2` into a `.mat`-compliant file.
 
 ## Main goodies
 
@@ -11,24 +8,17 @@ Log data in your CPP and Python nodes through `ROS2` into a `.mat` file.
 
 Call with `ros2 run sas_datalogger <NODE_NAME>`.
 
-| Node name                | Description                                              |
-|--------------------------|----------------------------------------------------------|
-| `sas_datalogger_node.py` | A convenience wrapper containing all conversion headers. |
+| Node name                                             | Description                                                                 |
+|-------------------------------------------------------|-----------------------------------------------------------------------------|
+| `sas_datalogger_node.py`                              | The main node that will store the data received through specialised topics. |
+| `#include <sas_datalogger/sas_datalogger_client.hpp>` | The `DataloggerClient` that must be used for `cpp` binaries.                |
+| `from sas_datalogger import DataloggerClient`         | The `DataloggerClient` that must be used in `Python` scripts.               |
 
 ### Example
 
-1. Run the example
-
-```commandline
-ros2 launch sas_datalogger sas_datalogger_client_example_launch.py
-```
-
-2. Press `CTRL+C` to end both nodes. The `.mat` file will be saved in the current directory, i.e. the one in which you ran the launch file.
-
-3. Check the values stored in the example log file as follows. The log filename will depend on the current timestamp.
-
-```commandLine
-ros2 run sas_datalogger sas_datalogger_client_example_result_check.py sas_log_2023_06_16_12_40_25.mat
+```console
+cd docker
+docker compose up
 ```
 
 #### CPP Usage
