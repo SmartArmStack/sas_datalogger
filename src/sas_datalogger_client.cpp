@@ -1,5 +1,5 @@
 /*
-# Copyright (c) 2012-2023 Murilo Marques Marinho
+# Copyright (c) 2012-2026 Murilo Marques Marinho
 #
 #    This file is part of sas_datalogger.
 #
@@ -30,8 +30,6 @@ namespace sas
 DataloggerClient::DataloggerClient(const rclcpp::Node::SharedPtr& node, const size_t& queue_size):
     sas::Object("sas::DataloggerClient")
 {
-    //sc_save         = node.serviceClient<sas_datalogger::Save>("/sas_datalogger/save");
-    //pub_add_value   = node.advertise<sas_datalogger::AddValueMsg>("/sas_datalogger/addvaluemsg",queue_size);
     publisher_log_ = node->create_publisher<sas_msgs::msg::LogDatum>("/sas_datalogger/log",queue_size);
 }
 
@@ -97,13 +95,5 @@ void DataloggerClient::log(const std::string& name, const std::string& value)
 
     publisher_log_->publish(msg);
 }
-
-
-//void DataloggerClient::save(const std::string& filename)
-//{
-//    sm_save.request.filename = filename;/
-//
-//    sc_save.call( sm_save );
-//}
 
 }

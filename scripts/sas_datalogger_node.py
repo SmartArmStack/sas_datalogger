@@ -22,12 +22,7 @@
 #   Author: Murilo M. Marinho, email: murilomarinho@ieee.org
 #
 # ################################################################
-
-import numpy
-
 import rclpy
-from rclpy.node import Node
-
 from sas_datalogger.sas_datalogger import SASDatalogger
 
 

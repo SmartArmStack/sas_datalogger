@@ -3,6 +3,7 @@ services:
     build: .
     environment:
       TIMEOUT: 20
+      PYTHONUNBUFFERED: 1
     volumes:
       - ../../sas_datalogger:/root/sas_datalogger_devel/src/sas_datalogger
     command: /bin/bash -c "

@@ -72,8 +72,6 @@ def main(args=None):
             rclcpp_spin_some(rclcpp_node)
             clock.update_and_sleep()
 
-        rclcpp_shutdown()  # Shutdown rclcpp
-
     except KeyboardInterrupt:
         print("Interrupted by user")
 
