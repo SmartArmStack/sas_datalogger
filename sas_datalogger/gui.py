@@ -9,9 +9,10 @@ You should have received a copy of the GNU General Public License along with thi
 see <https://www.gnu.org/licenses/>.
 """
 import rclpy
+from rclpy.node import Node
 
-from PyQt6.QtCore import QTimer, Qt, QCoreApplication
-from PyQt6.QtWidgets import QWidget, QApplication, QMainWindow, QSlider, QHBoxLayout, QVBoxLayout, QLabel
+from PyQt6.QtCore import QTimer
+from PyQt6.QtWidgets import QWidget, QApplication, QMainWindow, QHBoxLayout
 
 import qdarktheme
 import pyqtgraph as pg
@@ -35,7 +36,8 @@ class DataloggerWindow(QMainWindow):
         except ...:
             pass
 
-def main():
+def main(args=None):
+    rclpy.init()
     app = QApplication([])
     myapp = DataloggerWindow()
     qdarktheme.setup_theme()

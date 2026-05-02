@@ -23,15 +23,12 @@
 #
 # ################################################################
 
-import datetime
-
 import numpy
-import scipy.io as sio
 
 import rclpy
 from rclpy.node import Node
 
-from sas_msgs.msg import LogDatum
+from sas_datalogger.sas_datalogger import SASDatalogger
 
 
 def main(args=None):
@@ -45,51 +42,6 @@ def main(args=None):
             print("sas_datalogger_node ended by user with CTRL+C.")
         except Exception as e:
             print(e)
-
-
-class SASDatalogger(Node):
-
-    def __init__(self, node_name: str):
-        super().__init__(node_name=node_name)
-
-        self.data = {}
-        self.subscription_ = self.create_subscription(
-            LogDatum,
-            "/sas_datalogger/log",
-            self.log_callback,
-            100) #  If you're storing more than 100 values at each loop, this might need adjustment
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        filename = 'sas_log_{date:%Y_%m_%d_%H_%M_%S}.mat'.format(date=datetime.datetime.now())
-        print("Saving log to filename = '{}'.".format(filename))
-        sio.savemat(filename, self.data)
-
-    def save(self, filename: str):
-        sio.savemat(filename, self.data)
-        self.data = {}
-
-    def log_callback(self, msg: LogDatum):
-
-        # Initialize list for a given variable
-        if msg.name in self.data:
-            pass
-        else:
-            self.data[msg.name] = []
-
-        # Append value to dictionary
-        if len(msg.value) > 0:
-            if len(msg.layout) == 2:
-                self.data[msg.name].append(numpy.asarray(msg.value).reshape(msg.layout))
-            else:
-                self.data[msg.name].append(msg.value)
-        else:
-            self.data[msg.name].append(msg.strvalue)
-
-        return
-
 
 if __name__ == '__main__':
     main()
