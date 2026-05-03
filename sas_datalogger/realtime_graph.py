@@ -53,3 +53,4 @@ class RealtimeGraph(QWidget):
 
         self.plot.setYRange(self.lims[0], self.lims[1])
         self.plot.setTitle(self.title)
+
