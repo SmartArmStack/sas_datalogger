@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /root/sas_datalogger_devel
+cd /root/sas_datalogger_devel || exit 1
 ls .
 colcon build
 source install/setup.bash

@@ -39,16 +39,21 @@ import pyqtgraph as pg
 
 def sigint_handler(*args):
     QApplication.quit()
-    rclpy.shutdown()
+    # rclpy.shutdown()
 
 class DataloggerWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
+    def __init__(self,
+                 sampling_time: float = 0.001,
+                 parent = None):
+        super().__init__(parent)
+
+        self.sampling_time = sampling_time
 
         self.datalogger = SASDatalogger(node_name="sas_datalogger_gui_node")
+
         self.timer_ = QTimer()
         self.timer_.timeout.connect(self._timer_callback)
-        self.timer_.start(1)
+        self.timer_.start(int(sampling_time * 1000.0))
 
         self.central_widget = QWidget()
         self.layout = QHBoxLayout(self)
@@ -57,18 +62,22 @@ class DataloggerWindow(QMainWindow):
 
     def _timer_callback(self):
         try:
-            rclpy.spin_once(self.datalogger)
-        except ...:
-            pass
+            rclpy.spin_once(self.datalogger, timeout_sec=self.sampling_time)
+        except Exception as e:
+            print(e)
+
 
 def main(args=None):
     signal.signal(signal.SIGINT, sigint_handler)
-    rclpy.init(signal_handler_options=SignalHandlerOptions.NO)
-    app = QApplication([])
-    myapp = DataloggerWindow()
-    qdarktheme.setup_theme()
-    myapp.show()
-    app.exec()
+    try:
+        rclpy.init(args=args, signal_handler_options=SignalHandlerOptions.NO)
+        app = QApplication([])
+        myapp = DataloggerWindow()
+        qdarktheme.setup_theme()
+        myapp.show()
+        app.exec()
+    except KeyboardInterrupt:
+        pass
 
 if __name__ == "__main__":
     main()
