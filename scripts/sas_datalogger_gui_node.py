@@ -89,7 +89,7 @@ class DataloggerWindow(QMainWindow):
                 else:
                     print(f"Creating plot for: {key}. Valid datum = {datum}")
                     self.realtime_graphs_dict[key] = RealtimeGraph(key)
-                    self.layout.addWidget(self.realtime_graphs_dict[key])
+                    self.layout.addWidget(self.realtime_graphs_dict[key].plot)
                     self.realtime_graphs_dict[key].update(datum)
         except Exception as e:
             print(e)
