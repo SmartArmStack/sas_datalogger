@@ -68,14 +68,26 @@ class DataloggerWindow(QMainWindow):
             rclpy.spin_once(self.datalogger, timeout_sec=self.sampling_time)
 
             for key, value in self.datalogger.data.items():
-                datum = np.squeeze(value)[-1]
-                print(key, datum)
-                if isinstance(datum, np.ndarray):
+
+                if isinstance(value[-1], np.ndarray):
+                    datum = np.squeeze(value)[-1]
                     if len(datum.shape) > 1:
-                        continue
+                        continue # Ignore matrices, no real way to plot them.
+
+                datum = value[-1]
+
+                if isinstance(datum, str):
+                    continue # Ignore strings, no real way to plot them.
+
+                if len(datum) > 1:
+                    continue # TODO: Handle multiline plots.
+
+                datum = datum[-1]  # It's received as a pair, for instance ('d', 5.0)
+
                 if key in self.realtime_graphs_dict:
                     self.realtime_graphs_dict[key].update(datum)
                 else:
+                    print(f"Creating plot for: {key}. Valid datum = {datum}")
                     self.realtime_graphs_dict[key] = RealtimeGraph(key)
                     self.layout.addWidget(self.realtime_graphs_dict[key])
                     self.realtime_graphs_dict[key].update(datum)
