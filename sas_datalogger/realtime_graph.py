@@ -28,7 +28,7 @@ import pyqtgraph as pg
 class RealtimeGraph(QWidget):
     def __init__(self,
                  title: str,
-                 lims: tuple[float, float],
+                 lims: tuple[float, float]=[0,0],
                  max_queue_size: int=200,
                  parent=None):
         super().__init__(parent)

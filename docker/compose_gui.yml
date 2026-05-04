@@ -1,0 +1,31 @@
+services:
+  sas_datalogger_gui:
+    build: .
+    environment:
+      TIMEOUT: 20
+      DISPLAY: $DISPLAY
+      ROS_DOMAIN_ID: $ROS_DOMAIN_ID
+      PYTHONUNBUFFERED: 1
+    volumes:
+      - ~/.Xauthority:/root/.Xauthority # x server related
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw # x server related
+      - ../../sas_datalogger:/root/sas_datalogger_devel/src/sas_datalogger
+    command: /bin/bash -c "
+      cd /root/sas_datalogger_devel
+      && colcon build
+      && source install/setup.bash
+      && timeout -s INT $$TIMEOUT ros2 launch sas_datalogger sas_datalogger_gui_launch.py"
+
+  sas_datalogger_client_py:
+    build: .
+    environment:
+      TIMEOUT: 20
+      ROS_DOMAIN_ID: $ROS_DOMAIN_ID
+      PYTHONUNBUFFERED: 1
+    volumes:
+      - ../../sas_datalogger:/root/sas_datalogger_devel/src/sas_datalogger
+    command: /bin/bash -c "
+      cd /root/sas_datalogger_devel
+      && colcon build
+      && source install/setup.bash
+      && timeout -s INT $$TIMEOUT ros2 launch sas_datalogger sas_datalogger_client_python_example_launch.py execution_times:=5000"

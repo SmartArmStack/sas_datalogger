@@ -23,6 +23,7 @@
 #
 # ################################################################
 import signal
+import numpy as np
 
 import rclpy
 from rclpy.node import Node
@@ -55,6 +56,8 @@ class DataloggerWindow(QMainWindow):
         self.timer_.timeout.connect(self._timer_callback)
         self.timer_.start(int(sampling_time * 1000.0))
 
+        self.realtime_graphs_dict: dict = dict()
+
         self.central_widget = QWidget()
         self.layout = QHBoxLayout(self)
         self.central_widget.setLayout(self.layout)
@@ -63,6 +66,19 @@ class DataloggerWindow(QMainWindow):
     def _timer_callback(self):
         try:
             rclpy.spin_once(self.datalogger, timeout_sec=self.sampling_time)
+
+            for key, value in self.datalogger.data.items():
+                datum = np.squeeze(value)[-1]
+                print(key, datum)
+                if isinstance(datum, np.ndarray):
+                    if len(datum.shape) > 1:
+                        continue
+                if key in self.realtime_graphs_dict:
+                    self.realtime_graphs_dict[key].update(datum)
+                else:
+                    self.realtime_graphs_dict[key] = RealtimeGraph(key)
+                    self.layout.addWidget(self.realtime_graphs_dict[key])
+                    self.realtime_graphs_dict[key].update(datum)
         except Exception as e:
             print(e)
 
