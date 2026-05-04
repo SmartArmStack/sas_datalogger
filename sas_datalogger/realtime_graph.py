@@ -25,13 +25,11 @@ from queue import Queue
 from PyQt6.QtWidgets import QWidget
 import pyqtgraph as pg
 
-class RealtimeGraph(QWidget):
+class RealtimeGraph:
     def __init__(self,
                  title: str,
                  lims: tuple[float, float]=[0,0],
-                 max_queue_size: int=200,
-                 parent=None):
-        super().__init__(parent)
+                 max_queue_size: int=200):
 
         self.plot = pg.plot(title=title)
         self.title = title
