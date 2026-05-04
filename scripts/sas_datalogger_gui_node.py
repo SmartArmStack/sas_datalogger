@@ -59,7 +59,7 @@ class DataloggerWindow(QMainWindow):
         self.realtime_graphs_dict: dict = dict()
 
         self.central_widget = QWidget()
-        self.layout = QHBoxLayout(self)
+        self.layout = QHBoxLayout()
         self.central_widget.setLayout(self.layout)
         self.setCentralWidget(self.central_widget)
 
