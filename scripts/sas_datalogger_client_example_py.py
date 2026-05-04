@@ -26,6 +26,9 @@
 # Author: Murilo M. Marinho, email: murilomarinho@ieee.org
 import numpy as np
 
+import rclpy
+from rclpy.node import Node
+
 from sas_datalogger import DataloggerClient
 from sas_core import Clock
 from sas_common import rclcpp_init, rclcpp_Node, rclcpp_spin_some, rclcpp_shutdown
@@ -33,16 +36,21 @@ from sas_common import rclcpp_init, rclcpp_Node, rclcpp_spin_some, rclcpp_shutdo
 
 def main(args=None):
     """
-    An example showing some of the functionalites of the DataloggerClient.
+    An example showing some of the functionalities of the DataloggerClient.
 
     :param args: Not used directly by the user, but used by ROS2 to configure
     certain aspects of the Node.
     """
     try:
+        rclpy.init(args=args)
         rclcpp_init()  # Init rclcpp to use the sas python bindings. They do not use rclpy.
         # However, you can also have rclpy nodes active as long as you manage their spin
         # correctly.
-        rclcpp_node = rclcpp_Node("sas_datalogger_client_example_py")
+        rclcpp_node = rclcpp_Node("sas_datalogger_client_example_py_rclcpp")
+        rclpy_node = Node("sas_datalogger_client_example_py_rclpy")
+
+        rclpy_node.declare_parameter('execution_times', 5)
+        execution_times = rclpy_node.get_parameter('execution_times').get_parameter_value().integer_value
 
         datalogger_client = DataloggerClient(rclcpp_node)
 
@@ -52,7 +60,7 @@ def main(args=None):
             rclcpp_spin_some(rclcpp_node)
             clock.update_and_sleep()
 
-        for i in range(0, 5):
+        for i in range(0, execution_times):
             A = np.array([[1, 2, 3],
                           [4, 5, 6],
                           [7, 8, 9],
