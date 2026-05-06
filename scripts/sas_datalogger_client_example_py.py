@@ -70,6 +70,7 @@ def main(args=None):
             v = np.array([1, 5, 10, 15, 20])
             datalogger_client.log("v", v)
 
+            datalogger_client.log("another_value_double", -i)
             datalogger_client.log("value_double", i)
 
             datalogger_client.log("value_string", "Hello world!")
