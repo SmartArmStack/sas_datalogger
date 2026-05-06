@@ -29,6 +29,8 @@ import rclpy
 from rclpy.node import Node
 from rclpy.signals import SignalHandlerOptions
 
+from rcl_interfaces.msg import ParameterType, ParameterDescriptor
+
 from sas_datalogger.realtime_graph import RealtimeGraph
 from sas_datalogger.sas_datalogger import SASDatalogger
 
@@ -52,6 +54,20 @@ class DataloggerWindow(QMainWindow):
 
         self.datalogger = SASDatalogger(node_name="sas_datalogger_gui_node")
 
+        # rclpy issue 912
+        self.datalogger.declare_parameter(
+            'whitelist',
+            [""],
+            ParameterDescriptor
+            (
+                type=ParameterType.PARAMETER_STRING_ARRAY
+            ))
+        self.whitelist: list[str] = self.datalogger.get_parameter('whitelist').get_parameter_value().string_array_value
+        if self.whitelist == ['']:
+            self.whitelist = None
+        else:
+            print(f"Whitelist: {self.whitelist}")
+
         self.timer_ = QTimer()
         self.timer_.timeout.connect(self._timer_callback)
         self.timer_.start(int(sampling_time * 1000.0))
@@ -68,6 +84,10 @@ class DataloggerWindow(QMainWindow):
             rclpy.spin_once(self.datalogger, timeout_sec=self.sampling_time)
 
             for key, value in self.datalogger.data.items():
+
+                if self.whitelist is not None:
+                    if key not in self.whitelist:
+                        continue
 
                 if isinstance(value[-1], np.ndarray):
                     datum = np.squeeze(value)[-1]
