@@ -1,16 +1,12 @@
 # SAS datalogger Docker compose example
 
-Clone this repository
+Run
 
 ```bash
-cd ~/GitHub &&
-git clone https://github.com/SmartArmStack/sas_datalogger.git --recursive
-```
+mkdir -p ~/sas_datalogger/docker/sas_datalogger_example
+cd ~/sas_datalogger/docker/sas_datalogger_example
+curl -OL https://github.com/SmartArmStack/sas_datalogger/tree/jazzy/docker/sas_datalogger_example/compose.yml
 
-and launch the Docker compose
-
-```bash
-cd ~/GitHub/sas_datalogger/docker/sas_datalogger_example &&
 docker compose up
 ```
 
@@ -21,6 +17,6 @@ docker compose up
 > docker compose down -v
 > ```
 
-The saved `.mat` file will be located at `~/GitHub/sas_datalogger/docker/sas_datalogger_example/logs`.
+The saved `.mat` file will be located at `~/sas_datalogger/docker/sas_datalogger_example/logs`.
 
 For a detailed explanation of how to include the SAS datalogger container in your own Docker compose files, check the `compose.yml`.
