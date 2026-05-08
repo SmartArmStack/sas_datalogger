@@ -5,21 +5,16 @@ services:
   # Launch the client container
   sas_datalogger_client:
     # Set the image
-    build:
-      context: ../..
-      dockerfile: docker/sas_datalogger_example/Dockerfile
+    image: murilomarinho/sas:jazzy # Set the image
     container_name: sas_datalogger_client_container # name the container
     # Set environment variables
     environment:
-      ROS_DOMAIN_ID: 66 # isolate client and server nodes to the same Domain ID
       PYTHONUNBUFFERED: 1 # enforce unbuffered output mode in Python
-    # Launch sas_datalogger_client_cpp_docker_example_launch.py
+      ROS_DOMAIN_ID: $ROS_DOMAIN_ID # isolate client and server nodes to the same Domain ID
+    # Launch sas_datalogger_client_cpp_example_launch.py
     command: /bin/bash -c "
-      cd /app/sas_datalogger/;
-      colcon build &&
-      source install/setup.bash &&
       ros2 launch sas_datalogger
-      sas_datalogger_client_cpp_docker_example_launch.py"
+      sas_datalogger_client_cpp_example_launch.py"
 
   # Launch the server container
   sas_datalogger_server:
@@ -30,7 +25,7 @@ services:
     # Set environment variables
     environment:
       PYTHONUNBUFFERED: 1 # enforce unbuffered output mode in Python
-      ROS_DOMAIN_ID: 66 # isolate client and server nodes to the same Domain ID
+      ROS_DOMAIN_ID: $ROS_DOMAIN_ID # isolate client and server nodes to the same Domain ID
     # Bind the "logs" subfolder in the "compose.yml" path
     #   This way, the saved '.mat' file persists between runs of the container and it's also accessible when the container is not running :tada:
     volumes:
