@@ -1,0 +1,42 @@
+# Launch two containers:
+#   - The SAS datalogger client, which will run the example "sas_datalogger/src/examples/sas_datalogger_client_example.cpp"
+#   - The SAS datalogger server node "scripts/sas_datalogger_node.py"
+services:
+  # Launch the client container
+  sas_datalogger_client:
+    # Set the image
+    build:
+      context: ../..
+      dockerfile: docker/sas_datalogger_example/Dockerfile
+    container_name: sas_datalogger_client_container # name the container
+    # Set environment variables
+    environment:
+      ROS_DOMAIN_ID: 66 # isolate client and server nodes to the same Domain ID
+      PYTHONUNBUFFERED: 1 # enforce unbuffered output mode in Python
+    # Launch sas_datalogger_client_cpp_docker_example_launch.py
+    command: /bin/bash -c "
+      cd /app/sas_datalogger/;
+      colcon build &&
+      source install/setup.bash &&
+      ros2 launch sas_datalogger
+      sas_datalogger_client_cpp_docker_example_launch.py"
+
+  # Launch the server container
+  sas_datalogger_server:
+    image: murilomarinho/sas:jazzy # Set the image
+    container_name: sas_datalogger_server_container # name the container
+    stop_signal: SIGINT # define the signal used by Compose to stop the container
+    stop_grace_period: 120s # specify how long Compose must wait when attempting to stop the container if it doesn't handle "stop_signal"
+    # Set environment variables
+    environment:
+      PYTHONUNBUFFERED: 1 # enforce unbuffered output mode in Python
+      ROS_DOMAIN_ID: 66 # isolate client and server nodes to the same Domain ID
+    # Bind the "logs" subfolder in the "compose.yml" path
+    #   This way, the saved '.mat' file persists between runs of the container and it's also accessible when the container is not running :tada:
+    volumes:
+      - ./logs:/root/logs
+    # Launch sas_datalogger_launch.py
+    command: /bin/bash -c "
+      cd /root/logs &&
+      ros2 launch sas_datalogger  
+      sas_datalogger_launch.py"
