@@ -48,7 +48,7 @@ ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC
-    Eigen3
+    Eigen3::Eigen
     rclcpp::rclcpp
     sas_core::sas_core
     sas_common::sas_common
