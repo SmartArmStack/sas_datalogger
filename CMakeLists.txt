@@ -1,5 +1,10 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.20)
 project(sas_datalogger)
+
+# Default to C++20
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 20)
+endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -15,19 +20,25 @@ add_subdirectory(pybind11)
 ###############################
 
 find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_python REQUIRED)
+find_package(Eigen3 REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sas_core REQUIRED)
 find_package(sas_common REQUIRED)
 find_package(sas_msgs REQUIRED)
-find_package(Eigen3 REQUIRED)
 
-##### CPP LIBRARY #####
+####################################
+# CPP Shared Library Block [BEGIN] #
+# vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv #
+# https://ros2-tutorial.readthedocs.io/en/latest/
+# The most common use case is to merge everything you need to export
+# into the same shared library called ${PROJECT_NAME}.
 
 add_library(${PROJECT_NAME} SHARED
     src/sas_datalogger_client.cpp
     )
 
-ament_target_dependencies(${PROJECT_NAME} Eigen3 rclcpp sas_core sas_common sas_msgs)
+ament_target_dependencies(${PROJECT_NAME} )
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC
@@ -35,10 +46,14 @@ target_include_directories(${PROJECT_NAME}
     $<INSTALL_INTERFACE:include>)
 
 ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
-ament_export_dependencies(Eigen3 rclcpp sas_core sas_common sas_msgs)
 
-target_link_libraries(
-    ${PROJECT_NAME}
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+    Eigen3
+    rclcpp::rclcpp
+    sas_core::sas_core
+    sas_common::sas_common
+    sas_msgs::sas_msgs
     )
 
 install(
@@ -55,23 +70,37 @@ install(
     INCLUDES DESTINATION include
     )
 
-##END## CPP LIBRARY #####
+# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ #
+# CPP Shared Library Block [END] #
+##################################
 
-##### CPP BINARY #####
+############################
+# CPP Binary Block [BEGIN] #
+# vvvvvvvvvvvvvvvvvvvvvvvv #
+# https://ros2-tutorial.readthedocs.io/en/latest/
+# While we cant use blocks https://cmake.org/cmake/help/latest/command/block.html#command:block
+# we use set--unset
+set(RCLCPP_LOCAL_BINARY_NAME sas_datalogger_client_example)
 
-add_executable(sas_datalogger_client_example
-    src/examples/sas_datalogger_client_example.cpp)
+add_executable(${RCLCPP_LOCAL_BINARY_NAME}
+   src/examples/sas_datalogger_client_example.cpp
+)
 
-target_link_libraries(sas_datalogger_client_example
+target_link_libraries(${RCLCPP_LOCAL_BINARY_NAME} PRIVATE
     ${PROJECT_NAME}
-    Eigen3::Eigen
     )
 
-install(TARGETS
-  sas_datalogger_client_example
+target_include_directories(${RCLCPP_LOCAL_BINARY_NAME} PRIVATE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>)
+
+install(TARGETS ${RCLCPP_LOCAL_BINARY_NAME}
   DESTINATION lib/${PROJECT_NAME})
 
-##END## CPP BINARY #####
+unset(RCLCPP_LOCAL_BINARY_NAME)
+# ^^^^^^^^^^^^^^^^^^^^^^ #
+# CPP Binary Block [END] #
+##########################
 
 ##### PYBIND11 LIBRARY #####
 
@@ -81,14 +110,12 @@ pybind11_add_module(_${PROJECT_NAME} SHARED
     src/sas_datalogger_py.cpp
     )
 
+target_link_libraries(_${PROJECT_NAME} PRIVATE ${PROJECT_NAME})
+
 target_include_directories(_${PROJECT_NAME}
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
-
-target_compile_definitions(_${PROJECT_NAME} PRIVATE IS_SAS_PYTHON_BUILD)
-# https://github.com/pybind/pybind11/issues/387
-target_link_libraries(_${PROJECT_NAME} PRIVATE ${PROJECT_NAME})
 
 install(TARGETS _${PROJECT_NAME}
   DESTINATION "${PYTHON_INSTALL_DIR}/${PROJECT_NAME}"
@@ -120,17 +147,5 @@ install(DIRECTORY
 # ^^^^^^^^^^^^^^^^^^^ #
 # Scripts Block [END] #
 #######################
-
-if(BUILD_TESTING)
-  find_package(ament_lint_auto REQUIRED)
-  # the following line skips the linter which checks for copyrights
-  # comment the line when a copyright and license is added to all source files
-  set(ament_cmake_copyright_FOUND TRUE)
-  # the following line skips cpplint (only works in a git repo)
-  # comment the line when this package is in a git repo and when
-  # a copyright and license is added to all source files
-  set(ament_cmake_cpplint_FOUND TRUE)
-  ament_lint_auto_find_test_dependencies()
-endif()
 
 ament_package()
