@@ -24,6 +24,7 @@
 # ################################################################
 import signal
 import numpy as np
+import threading
 
 import rclpy
 from rclpy.node import Node
@@ -42,7 +43,7 @@ import pyqtgraph as pg
 
 def sigint_handler(*args):
     QApplication.quit()
-    # rclpy.shutdown()
+    rclpy.shutdown()
 
 class DataloggerWindow(QMainWindow):
     def __init__(self,
@@ -53,6 +54,7 @@ class DataloggerWindow(QMainWindow):
         self.sampling_time = sampling_time
 
         self.datalogger = SASDatalogger(node_name="sas_datalogger_gui_node")
+        self.datalogger_spin_thread = threading.Thread(target=self.spin)
 
         # rclpy issue 912
         self.datalogger.declare_parameter(
@@ -62,7 +64,7 @@ class DataloggerWindow(QMainWindow):
             (
                 type=ParameterType.PARAMETER_STRING_ARRAY
             ))
-        self.whitelist: list[str] = self.datalogger.get_parameter('whitelist').get_parameter_value().string_array_value
+        self.whitelist: list[str] | None = self.datalogger.get_parameter('whitelist').get_parameter_value().string_array_value
         if self.whitelist == ['']:
             self.whitelist = None
         else:
@@ -79,9 +81,14 @@ class DataloggerWindow(QMainWindow):
         self.central_widget.setLayout(self.layout)
         self.setCentralWidget(self.central_widget)
 
+        self.datalogger_spin_thread.start()
+
+    def spin(self):
+        rclpy.spin(self.datalogger)
+
     def _timer_callback(self):
         try:
-            rclpy.spin_once(self.datalogger, timeout_sec=self.sampling_time)
+            # rclpy.spin_once(self.datalogger, timeout_sec=self.sampling_time)
 
             for key, value in self.datalogger.data.items():
 
