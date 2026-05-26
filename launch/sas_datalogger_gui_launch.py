@@ -9,7 +9,7 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument(
             'whitelist',
-            default_value='[]'
+            default_value="[' ',]"
         ),
         Node(
             output='screen',
