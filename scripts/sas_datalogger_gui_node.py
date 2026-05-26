@@ -67,6 +67,7 @@ class DataloggerWindow(QMainWindow):
         self.whitelist: list[str] | None = self.datalogger.get_parameter('whitelist').get_parameter_value().string_array_value
         if self.whitelist == [' ']:
             self.whitelist = None
+            print(f"Whitelist empty, plotting all values in datalogger topic.")
         else:
             print(f"Whitelist: {self.whitelist}")
 
