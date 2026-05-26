@@ -65,7 +65,7 @@ class DataloggerWindow(QMainWindow):
                 type=ParameterType.PARAMETER_STRING_ARRAY
             ))
         self.whitelist: list[str] | None = self.datalogger.get_parameter('whitelist').get_parameter_value().string_array_value
-        if self.whitelist == ['']:
+        if self.whitelist == [' ']:
             self.whitelist = None
         else:
             print(f"Whitelist: {self.whitelist}")
@@ -124,8 +124,9 @@ class DataloggerWindow(QMainWindow):
 
 def main(args=None):
     signal.signal(signal.SIGINT, sigint_handler)
+    rclpy.init(args=args, signal_handler_options=SignalHandlerOptions.NO)
     try:
-        rclpy.init(args=args, signal_handler_options=SignalHandlerOptions.NO)
+
         app = QApplication([])
         myapp = DataloggerWindow()
         qdarktheme.setup_theme()
