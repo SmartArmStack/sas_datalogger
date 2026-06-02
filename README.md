@@ -56,8 +56,7 @@ scalars and strings to the datalogger topic.
 
 - `scripts/sas_datalogger_client_example_py.py` — Python example client.
 - `src/examples/sas_datalogger_client_example.cpp` (binary: `sas_datalogger_client_example`) — C++ example client.
-- `scripts/sas_datalogger_client_example_result_check.py` — simple helper to
-  open and inspect the generated `.mat` file using `scipy.io.loadmat`.
+- `scripts/sas_datalogger_client_example_result_check.py` — opens and inspects the generated `.mat` file using `scipy.io.loadmat`.
 
 Recommended use is through the launch file. The server must be launched separately.
 
