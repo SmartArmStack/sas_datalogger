@@ -36,9 +36,9 @@ namespace sas
 {
 
 /**
- * @brief Lightweight client for publishing log data.
+ * @brief Client for publishing log data.
  *
- * DataloggerClient provides helpers to publish various types (matrices,
+ * DataloggerClient provides methods to publish various types (matrices,
  * vectors, scalars and strings) as `sas_msgs::msg::LogDatum` messages.
  * It is intended for runtime logging and can also request saving logged
  * data to a file via the `save` method.
