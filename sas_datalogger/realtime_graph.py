@@ -20,16 +20,35 @@
 #   Author: Murilo M. Marinho, email: murilomarinho@ieee.org
 #
 # ################################################################
+"""Realtime plotting class used by sas_datalogger GUI components.
+
+Provides a convenience wrapper around ``pyqtgraph`` to display a
+streaming scalar signal with an internal fixed-size queue.
+"""
+
 import numpy as np
 from queue import Queue
 from PyQt6.QtWidgets import QWidget
 import pyqtgraph as pg
 
 class RealtimeGraph:
+    """Realtime plotting class.
+
+    Maintains a fixed-size queue of recent scalar samples and updates a
+    ``pyqtgraph`` window with the latest data and automatic Y-range.
+    """
+
     def __init__(self,
                  title: str,
                  lims: tuple[float, float]=[0,0],
                  max_queue_size: int=200):
+        """Create the realtime plot.
+
+        Args:
+            title: Window title for the plot.
+            lims: Initial Y-axis limits as (min, max).
+            max_queue_size: Maximum number of samples to retain.
+        """
 
         self.plot = pg.plot(title=title)
         self.title = title
@@ -38,6 +57,11 @@ class RealtimeGraph:
         self.plot_data = self.plot.plot([])
 
     def update(self, datum: float):
+        """Append a new scalar sample and refresh the plot.
+
+        Args:
+            datum: Scalar value to append to the internal buffer.
+        """
 
         if self.queue.full():
             self.queue.get()

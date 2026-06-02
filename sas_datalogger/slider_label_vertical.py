@@ -21,15 +21,35 @@
 #
 # ################################################################
 
+"""GUI widgets for the SAS datalogger package.
+
+This module provides a vertical slider widget with descriptive and
+value labels used by the datalogger UI.
+"""
+
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QWidget, QSlider, QVBoxLayout, QLabel
 
 
 class SliderLabelVertical(QWidget):
+    """Widget combining a vertical QSlider with descriptive and value labels.
+
+    The widget shows a description label, a label that displays the current
+    value as text, and a vertical slider. It is intended for control and
+    display in GUI panels.
+    """
+
     def __init__(self,
                  label:str,
                  slider_range:tuple[int,int],
                  parent=None):
+        """Initialize the widget.
+
+        Args:
+            label: Descriptive text shown above the slider.
+            slider_range: Tuple (min, max) describing the integer range.
+            parent: Optional parent widget.
+        """
         super().__init__(parent)
 
         self.description_label = QLabel()
@@ -49,7 +69,17 @@ class SliderLabelVertical(QWidget):
         self.setLayout(self.layout)
 
     def set_value(self, value):
+        """Set the slider's numeric value.
+
+        Args:
+            value: Integer value to set the slider to.
+        """
         self.slider.setValue(value)
 
     def set_text(self, text):
+        """Set the text displayed in the value label.
+
+        Args:
+            text: Text to display next to the slider.
+        """
         self.value_label.setText(text)

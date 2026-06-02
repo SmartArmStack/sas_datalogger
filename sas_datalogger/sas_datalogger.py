@@ -23,6 +23,16 @@
 #
 # ################################################################
 
+"""sas_datalogger package
+
+ROS2 data logging.
+
+Public classes:
+- SASDatalogger: an rclpy.Node that subscribes to the
+  ``/sas_datalogger/log`` topic (message type ``sas_msgs::msg::LogDatum``)
+  and accumulates values in memory.
+"""
+
 import datetime
 
 import numpy
@@ -35,8 +45,20 @@ from sas_msgs.msg import LogDatum
 
 
 class SASDatalogger(Node):
+    """ROS2 data logger node.
+
+    Subscribes to the ``/sas_datalogger/log`` topic and stores received values
+    in an internal dictionary keyed by the message ``name`` field. The stored
+    data can be persisted to disk with :meth:`save` or automatically when the
+    instance exits a ``with`` block.
+    """
 
     def __init__(self, node_name: str):
+        """Create and initialize the SAS data logger node.
+
+        Args:
+            node_name: Name to use when creating the underlying rclpy.Node.
+        """
         super().__init__(node_name=node_name)
 
         self.data = {}
@@ -55,10 +77,17 @@ class SASDatalogger(Node):
         sio.savemat(filename, self.data)
 
     def save(self, filename: str):
+        """Persist collected data to a MATLAB ``.mat`` file.
+
+        Args:
+            filename: Path to the output ``.mat`` file.
+        """
         sio.savemat(filename, self.data)
         self.data = {}
 
     def log_callback(self, msg: LogDatum):
+        """Callback invoked for incoming :class:`sas_msgs.msg.LogDatum` messages.
+        """
 
         # Initialize list for a given variable
         if msg.name in self.data:
