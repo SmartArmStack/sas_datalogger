@@ -1,34 +1,73 @@
 # sas_datalogger
 
-Log data through `ROS2` into a `.mat`-compliant file.
+> [!TIP]
+> Repository for this module: https://github.com/SmartArmStack/sas_datalogger <br />
+> More information about SmartArmStack is available at https://smartarmstack.github.io/.
 
-## Main goodies
+## Quick start
 
-### Node
+```bash
+mkdir -p ~/sas_datalogger/docker/sas_datalogger_example
+cd ~/sas_datalogger/docker/sas_datalogger_example
+curl -OL curl -OL https://raw.githubusercontent.com/SmartArmStack/sas_datalogger/refs/heads/jazzy/docker/sas_datalogger_example/compose.yml
 
-Call with `ros2 run sas_datalogger <NODE_NAME>`.
-
-| Node name                                             | Description                                                                 |
-|-------------------------------------------------------|-----------------------------------------------------------------------------|
-| `sas_datalogger_node.py`                              | The main node that will store the data received through specialised topics. |
-| `#include <sas_datalogger/sas_datalogger_client.hpp>` | The `DataloggerClient` that must be used for `cpp` binaries.                |
-| `from sas_datalogger import DataloggerClient`         | The `DataloggerClient` that must be used in `Python` scripts.               |
-
-### Example
-
-```console
-cd docker
 docker compose up
 ```
 
-#### CPP Usage
+> [!IMPORTANT]
+> To stop, press `Ctrl + C`. Do not forget to remove the containers: 
+>
+> ```shell
+> docker compose down -v
+> ```
 
-Refer to the example `src/examples/sas_datalogger_client_example.cpp`.
+The saved `.mat` file will be located at `~/sas_datalogger/docker/sas_datalogger_example/logs`.
 
-https://github.com/SmartArmStack/sas_datalogger/blob/c18667d55c1293dbfcb3491b4e17e2ba095620dc/src/examples/sas_datalogger_client_example.cpp#L25-L102
-    
-#### Python Usage
+## ROS 2 Nodes and Launch Files
 
-Refer to the example `scripts/sas_datalogger_client_example_py.py`.
+This package provides a datalogger server and suitable client APIs in C++ and Python.
 
-https://github.com/SmartArmStack/sas_datalogger/blob/c18667d55c1293dbfcb3491b4e17e2ba095620dc/scripts/sas_datalogger_client_example_py.py#L27-L82
+### sas_datalogger_node
+
+The main datalogger node subscribes to `/sas_datalogger/log` and stores received values in memory.
+When the node is shut down it saves the collected data to a MATLAB-compatible `.mat` file (via `scipy.io.savemat`). 
+
+Recommended use is through the launch file. The server must be launched separately.
+
+```bash
+ros2 launch sas_datalogger sas_datalogger_launch.py
+```
+
+### sas_datalogger_gui_node
+
+A Qt-based GUI that reads the datalogger's internal dictionary and creates
+ execution-time plots for numeric values. 
+
+Recommended use is through the launch file. The server must be launched separately.
+
+```bash
+ros2 launch sas_datalogger sas_datalogger_gui_launch.py
+```
+
+### Example client scripts
+
+The package includes simple example clients that publish matrices, vectors,
+scalars and strings to the datalogger topic.
+
+- `scripts/sas_datalogger_client_example_py.py` — Python example client.
+- `src/examples/sas_datalogger_client_example.cpp` (binary: `sas_datalogger_client_example`) — C++ example client.
+- `scripts/sas_datalogger_client_example_result_check.py` — simple helper to
+  open and inspect the generated `.mat` file using `scipy.io.loadmat`.
+
+Recommended use is through the launch file. The server must be launched separately.
+
+```bash
+ros2 launch sas_datalogger sas_datalogger_client_python_example_launch.py
+```
+
+Recommended use is through the launch file. The server must be launched separately.
+
+```bash
+ros2 launch sas_datalogger sas_datalogger_client_cpp_example_launch.py
+```
+
