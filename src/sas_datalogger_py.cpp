@@ -37,10 +37,11 @@ PYBIND11_MODULE(_sas_datalogger, m) {
     dc.def(py::init<const std::shared_ptr<rclcpp::Node>&,const size_t&>(),
            py::arg("node"),
            py::arg("queue_size") = 100);
-    dc.def("is_enabled",&DC::is_enabled,"Returns true if the client is connected to the datalogger server, false otherwise.");
+    dc.def("is_enabled",&DC::is_enabled,
+        py::arg("server_count") = 1,
+        "Returns true if the client is connected to the datalogger server, false otherwise.");
 
-    dc.def("log",py::overload_cast<const std::string&, const MatrixXd&>(&DC::log),"Logs a matrix.");
-    dc.def("log",py::overload_cast<const std::string&, const VectorXd&>(&DC::log),"Logs a vector.");
+    dc.def("log",py::overload_cast<const std::string&, const Eigen::Ref<const MatrixXd>&>(&DC::log),"Logs a matrix or vector.");
     dc.def("log",py::overload_cast<const std::string&, const std::vector<double>&>(&DC::log),"Logs a vector.");
     dc.def("log",py::overload_cast<const std::string&, const double&>(&DC::log),"Logs a scalar.");
     dc.def("log",py::overload_cast<const std::string&, const std::string&>(&DC::log),"Logs a string.");

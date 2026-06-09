@@ -33,29 +33,18 @@ DataloggerClient::DataloggerClient(const rclcpp::Node::SharedPtr& node, const si
     publisher_log_ = node->create_publisher<sas_msgs::msg::LogDatum>("/sas_datalogger/log",queue_size);
 }
 
-bool DataloggerClient::is_enabled() const
+bool DataloggerClient::is_enabled(int server_count) const
 {
-    return (publisher_log_->get_subscription_count() > 0);
+    return (int(publisher_log_->get_subscription_count()) >= server_count);
 }
 
-void DataloggerClient::log(const std::string &name, const MatrixXd &value)
+void DataloggerClient::log(const std::string& name, const Eigen::Ref<const MatrixXd>& value)
 {
     sas_msgs::msg::LogDatum msg;
 
     msg.name = name;
     msg.value = std::vector<double>(value.data(), value.data() + value.rows() * value.cols());
     msg.layout = {int(value.rows()),int(value.cols())};
-    msg.strvalue = std::string("");
-
-    publisher_log_->publish(msg);
-}
-
-void DataloggerClient::log(const std::string& name, const Eigen::VectorXd& value)
-{
-    sas_msgs::msg::LogDatum msg;
-
-    msg.name  = name;
-    msg.value = std::vector<double>(value.data(), value.data() + value.rows() * value.cols());
     msg.strvalue = std::string("");
 
     publisher_log_->publish(msg);
