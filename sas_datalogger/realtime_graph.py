@@ -51,6 +51,7 @@ class RealtimeGraph:
         """
 
         self.plot = pg.plot(title=title)
+        self.plot.addLegend()
         self.title = title
         self.queue = Queue(maxsize=max_queue_size)
         self.lims = list(lims)
@@ -62,11 +63,19 @@ class RealtimeGraph:
         Args:
             datum: Value to append to the internal buffer.
         """
+        try:
+            len(datum)
+        except TypeError:
+            datum = [datum]
 
+        colors = ('w', 'g', 'r', 'c', 'm', 'y', 'k', 'b')
         # Initialize plot data lines on the first update
         if len(self.plot_data) == 0:
-            for _ in range(len(datum)):
-                self.plot_data.append(self.plot.plot([]))
+            for i in range(len(datum)):
+                if len(datum) > 0:
+                    self.plot_data.append(self.plot.plot([],name=f"{i}",pen=colors[i % len(colors)]))
+                else:
+                    self.plot_data.append(self.plot.plot([]))
         # Check that the new datum has the same length as previous data
         if len(self.plot_data) != len(datum):
             raise ValueError("Data length cannot change in the same plot.")

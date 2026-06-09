@@ -108,9 +108,9 @@ class DataloggerWindow(QMainWindow):
                     continue # Ignore strings, no real way to plot them.
 
                 if len(datum) > 1:
-                    print(datum) # TODO: Handle multiline plots.
-
-                datum = datum[-1]  # It's received as a pair, for instance ('d', 5.0)
+                    datum = np.squeeze(datum)
+                else:
+                    datum = datum[-1]  # It's received as a pair, for instance ('d', 5.0)
 
                 if key in self.realtime_graphs_dict:
                     self.realtime_graphs_dict[key].update(datum)
