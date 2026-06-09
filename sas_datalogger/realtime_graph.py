@@ -54,14 +54,22 @@ class RealtimeGraph:
         self.title = title
         self.queue = Queue(maxsize=max_queue_size)
         self.lims = list(lims)
-        self.plot_data = self.plot.plot([])
+        self.plot_data = []
 
-    def update(self, datum: float):
-        """Append a new scalar sample and refresh the plot.
+    def update(self, datum: list[float]):
+        """Append a new sample and refresh the plot.
 
         Args:
-            datum: Scalar value to append to the internal buffer.
+            datum: Value to append to the internal buffer.
         """
+
+        # Initialize plot data lines on the first update
+        if len(self.plot_data) == 0:
+            for _ in range(len(datum)):
+                self.plot_data.append(self.plot.plot([]))
+        # Check that the new datum has the same length as previous data
+        if len(self.plot_data) != len(datum):
+            raise ValueError("Data length cannot change in the same plot.")
 
         if self.queue.full():
             self.queue.get()
@@ -71,7 +79,9 @@ class RealtimeGraph:
 
         self.lims[0] = min(self.lims[0], np.min(current_data))
         self.lims[1] = max(self.lims[1], np.max(current_data))
-        self.plot_data.setData(np.linspace(0, 1, self.queue.qsize()), current_data)
+
+        for i in range(len(datum)):
+            self.plot_data[i].setData(np.linspace(0, 1, self.queue.qsize()), current_data[:, i])
 
         self.plot.setYRange(self.lims[0], self.lims[1])
         self.plot.setTitle(self.title)

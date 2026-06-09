@@ -14,7 +14,7 @@ services:
       cd /root/sas_datalogger_devel
       && colcon build
       && source install/setup.bash
-      && timeout -s INT $$TIMEOUT ros2 launch sas_datalogger sas_datalogger_gui_launch.py whitelist:=['value_double','another_value_double']"
+      && timeout -s INT $$TIMEOUT ros2 launch sas_datalogger sas_datalogger_gui_launch.py whitelist:=['value_double','another_value_double', 'v']"
 
   sas_datalogger_client_py:
     build: .
