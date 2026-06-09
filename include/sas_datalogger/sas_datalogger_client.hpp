@@ -65,23 +65,15 @@ public:
      * @return true when enabled and ready to publish messages.
      * @return false otherwise.
      */
-    bool is_enabled() const;
+    bool is_enabled(int server_count=1) const;
 
     /**
-     * @brief Log a matrix value under the given name.
+     * @brief Log a matrix (MatrixXd) or vector (VectorXd) value under the given name.
      *
      * @param name Key/name under which the value will be logged.
-     * @param value The Eigen::MatrixXd value to log.
+     * @param value the Eigen::Ref<const MatrixXd> value to log.
      */
-    void log(const std::string& name, const MatrixXd& value);
-
-    /**
-     * @brief Log a vector value under the given name.
-     *
-     * @param name Key/name under which the value will be logged.
-     * @param value The Eigen::VectorXd value to log.
-     */
-    void log(const std::string& name, const VectorXd& value);
+    void log(const std::string& name, const Eigen::Ref<const MatrixXd>& value);
 
     /**
      * @brief Log a std::vector<double> value under the given name.
