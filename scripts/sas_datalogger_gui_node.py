@@ -108,14 +108,14 @@ class DataloggerWindow(QMainWindow):
                     continue # Ignore strings, no real way to plot them.
 
                 if len(datum) > 1:
-                    continue # TODO: Handle multiline plots.
+                    print(datum) # TODO: Handle multiline plots.
 
                 datum = datum[-1]  # It's received as a pair, for instance ('d', 5.0)
 
                 if key in self.realtime_graphs_dict:
                     self.realtime_graphs_dict[key].update(datum)
                 else:
-                    print(f"Creating plot for: {key}. Valid datum = {datum}")
+                    # print(f"Creating plot for: {key}. Valid datum = {datum}")
                     self.realtime_graphs_dict[key] = RealtimeGraph(key)
                     self.layout.addWidget(self.realtime_graphs_dict[key].plot)
                     self.realtime_graphs_dict[key].update(datum)
