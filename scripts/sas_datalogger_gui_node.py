@@ -22,12 +22,12 @@
 #   Author: Murilo M. Marinho, email: murilomarinho@ieee.org
 #
 # ################################################################
+from math import sqrt
 import signal
 import numpy as np
 import threading
 
 import rclpy
-from rclpy.node import Node
 from rclpy.signals import SignalHandlerOptions
 
 from rcl_interfaces.msg import ParameterType, ParameterDescriptor
@@ -36,7 +36,7 @@ from sas_datalogger.realtime_graph import RealtimeGraph
 from sas_datalogger.sas_datalogger import SASDatalogger
 
 from PyQt6.QtCore import QTimer
-from PyQt6.QtWidgets import QWidget, QApplication, QMainWindow, QHBoxLayout
+from PyQt6.QtWidgets import QWidget, QApplication, QMainWindow, QHBoxLayout, QGridLayout
 
 import qdarktheme
 import pyqtgraph as pg
@@ -78,7 +78,10 @@ class DataloggerWindow(QMainWindow):
         self.realtime_graphs_dict: dict = dict()
 
         self.central_widget = QWidget()
-        self.layout = QHBoxLayout()
+        if self.whitelist is None:
+            self.layout = QHBoxLayout()
+        else:
+            self.layout = QGridLayout()
         self.central_widget.setLayout(self.layout)
         self.setCentralWidget(self.central_widget)
 
@@ -117,7 +120,16 @@ class DataloggerWindow(QMainWindow):
                 else:
                     # print(f"Creating plot for: {key}. Valid datum = {datum}")
                     self.realtime_graphs_dict[key] = RealtimeGraph(key)
-                    self.layout.addWidget(self.realtime_graphs_dict[key].plot)
+                    if self.whitelist is None:
+                        self.layout.addWidget(self.realtime_graphs_dict[key].plot)
+                    else:
+                        count = len(self.realtime_graphs_dict)
+                        total = len(self.whitelist)
+                        # 16:9 aspect ratio
+                        row_max = int((total**(16+9))**(1.0/16.0))
+                        row = int(count/row_max)
+                        col = count%row_max
+                        self.layout.addWidget(self.realtime_graphs_dict[key].plot,row,col)
                     self.realtime_graphs_dict[key].update(datum)
         except Exception as e:
             print(e)
