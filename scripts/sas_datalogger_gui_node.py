@@ -123,7 +123,7 @@ class DataloggerWindow(QMainWindow):
                     if self.whitelist is None:
                         self.layout.addWidget(self.realtime_graphs_dict[key].plot)
                     else:
-                        count = len(self.realtime_graphs_dict)
+                        count = len(self.realtime_graphs_dict) - 1  # Do not count the one we just created, because it's the one we're adding
                         total = len(self.whitelist)
                         # 16:9 aspect ratio
                         row_max = int(total**(16.0/25.0))
