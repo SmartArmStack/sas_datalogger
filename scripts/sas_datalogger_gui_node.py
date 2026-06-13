@@ -126,7 +126,7 @@ class DataloggerWindow(QMainWindow):
                         count = len(self.realtime_graphs_dict)
                         total = len(self.whitelist)
                         # 16:9 aspect ratio
-                        row_max = int((total**(16+9))**(1.0/16.0))
+                        row_max = int(total**(16.0/25.0))
                         row = int(count/row_max)
                         col = count%row_max
                         self.layout.addWidget(self.realtime_graphs_dict[key].plot,row,col)
