@@ -35,3 +35,6 @@ services:
       cd /root/logs &&
       ros2 launch sas_datalogger  
       sas_datalogger_launch.py"
+    # Make the logs fully accessible in the host (i.e., you can read, write, and execute them outside the container)
+    pre_stop:
+      - command: chmod 777 -R /root/logs/
