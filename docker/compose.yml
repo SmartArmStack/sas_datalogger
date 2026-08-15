@@ -1,13 +1,13 @@
 services:
   sas_datalogger:
-    build: .
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
     environment:
       TIMEOUT: 20
       PYTHONUNBUFFERED: 1
       DISPLAY: ":99"
-    volumes:
-      - ../../sas_datalogger:/root/sas_datalogger_devel/src/sas_datalogger
     command: /bin/bash -c "
       cd /root/sas_datalogger_devel/src/sas_datalogger/docker
-      && chmod +x test.sh 
+      && chmod +x test.sh
       && ./test.sh"
