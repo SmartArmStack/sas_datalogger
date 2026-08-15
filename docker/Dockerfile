@@ -11,4 +11,5 @@ RUN cd /root/sas_datalogger \
     && . install.sh
 
 RUN sudo sudo apt-get remove -y ros-jazzy-sas-datalogger
-RUN mkdir -p /root/sas_robot_datalogger_devel/src/
+RUN mkdir -p /root/sas_datalogger_devel/src/
+COPY . /root/sas_datalogger_devel/src/sas_datalogger
