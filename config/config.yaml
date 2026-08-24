@@ -1,0 +1,28 @@
+# Parameters for the sas_datalogger nodes.
+#
+# Each top-level block is keyed by the ROS node name and is loaded by the
+# corresponding launch file via its `config_file` argument.
+
+# Main datalogger server (scripts/sas_datalogger_node.py)
+sas_datalogger:
+  ros__parameters: {}
+    # The datalogger server declares no ROS parameters.
+
+# Qt GUI (scripts/sas_datalogger_gui_node.py)
+sas_datalogger_gui_node:
+  ros__parameters:
+    # A list of values to plot. The single-space entry `[' ']` is the
+    # package convention for "plot all values" (the node maps it to None).
+    whitelist: [' ']
+
+# C++ example client (src/examples/sas_datalogger_client_example.cpp)
+sas_datalogger_client_example:
+  ros__parameters: {}
+    # The C++ example client declares no ROS parameters.
+
+# Python example client (scripts/sas_datalogger_client_example_py.py)
+# The script creates two nodes; only the rclpy node below declares parameters.
+# (The rclcpp node `sas_datalogger_client_example_py_rclcpp` has none.)
+sas_datalogger_client_example_py_rclpy:
+  ros__parameters:
+    execution_times: 5

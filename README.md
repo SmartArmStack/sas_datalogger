@@ -23,50 +23,97 @@ docker compose up
 
 The saved `.mat` file will be located at `~/sas_datalogger/docker/sas_datalogger_example/logs`.
 
-## ROS 2 Nodes and Launch Files
+## ROS 2 Nodes & Parameters
 
-This package provides a datalogger server and suitable client APIs in C++ and Python.
+This package provides a datalogger server and suitable client APIs in C++ and
+Python. Each node is launched through its own launch file, which loads
+parameters from `config/config.yaml` (pass a different file with
+`config_file:=/path/to/config.yaml`).
 
-### sas_datalogger_node
+### Node: `sas_datalogger`
 
-The main datalogger node subscribes to `/sas_datalogger/log` and stores received values in memory.
-When the node is shut down it saves the collected data to a MATLAB-compatible `.mat` file (via `scipy.io.savemat`). 
+| Property | Value |
+|---|---|
+| **Executable** | `sas_datalogger_node.py` |
+| **ROS node name** | `sas_datalogger` (set by the `name` launch argument of `sas_datalogger_launch.py`) |
+| **Description** | Main datalogger node. Subscribes to `/sas_datalogger/log` and stores received values in memory. When the node is shut down it saves the collected data to a MATLAB-compatible `.mat` file (via `scipy.io.savemat`). |
 
-Recommended use is through the launch file. The server must be launched separately.
+#### Parameters
+
+The server declares **no ROS parameters** — it subscribes to the fixed topic `/sas_datalogger/log`.
+
+#### Sample launch
 
 ```bash
 ros2 launch sas_datalogger sas_datalogger_launch.py
 ```
 
-### sas_datalogger_gui_node
+### Node: `sas_datalogger_gui_node`
 
-A Qt-based GUI that reads the datalogger's internal dictionary and creates
- execution-time plots for numeric values. 
+| Property | Value |
+|---|---|
+| **Executable** | `sas_datalogger_gui_node.py` |
+| **ROS node name** | `sas_datalogger_gui_node` (set by the `name` launch argument of `sas_datalogger_gui_launch.py`) |
+| **Description** | A Qt-based GUI that reads the datalogger's internal dictionary and creates execution-time plots for numeric values. |
 
-Recommended use is through the launch file. The server must be launched separately.
+#### Parameters
+
+| Parameter | Type | Mandatory / Optional | Default | Purpose |
+|---|---|---|---|---|
+| `whitelist` | string array | Optional | `[' ']` | List of values to plot. The single-space entry `[' ']` is the package convention for "plot all values" (the node maps it to `None`) |
+
+#### Sample launch
 
 ```bash
 ros2 launch sas_datalogger sas_datalogger_gui_launch.py
 ```
 
-### Example client scripts
-
-The package includes simple example clients that publish matrices, vectors,
-scalars and strings to the datalogger topic.
-
-- `scripts/sas_datalogger_client_example_py.py` — Python example client.
-- `src/examples/sas_datalogger_client_example.cpp` (binary: `sas_datalogger_client_example`) — C++ example client.
-- `scripts/sas_datalogger_client_example_result_check.py` — opens and inspects the generated `.mat` file using `scipy.io.loadmat`.
-
-Recommended use is through the launch file. The server must be launched separately.
+To plot only specific values:
 
 ```bash
-ros2 launch sas_datalogger sas_datalogger_client_python_example_launch.py
+ros2 launch sas_datalogger sas_datalogger_gui_launch.py config_file:=/path/to/config.yaml
 ```
 
-Recommended use is through the launch file. The server must be launched separately.
+### Node: `sas_datalogger_client_example` (C++ example client)
+
+| Property | Value |
+|---|---|
+| **Executable** | `sas_datalogger_client_example` |
+| **ROS node name** | `sas_datalogger_client_example` (set by the `name` launch argument of `sas_datalogger_client_cpp_example_launch.py`) |
+| **Description** | C++ example client. Publishes matrices, vectors, scalars and strings to the datalogger topic. |
+
+#### Parameters
+
+The C++ example client declares **no ROS parameters**.
+
+#### Sample launch
 
 ```bash
 ros2 launch sas_datalogger sas_datalogger_client_cpp_example_launch.py
 ```
 
+### Node: `sas_datalogger_client_example_py_rclpy` (Python example client)
+
+| Property | Value |
+|---|---|
+| **Executable** | `sas_datalogger_client_example_py.py` |
+| **ROS node name** | `sas_datalogger_client_example_py_rclpy` (fixed in the script; the script creates two nodes, so no `name` launch argument is set) |
+| **Description** | Python example client. Publishes matrices, vectors, scalars and strings to the datalogger topic. |
+
+#### Parameters
+
+| Parameter | Type | Mandatory / Optional | Default | Purpose |
+|---|---|---|---|---|
+| `execution_times` | integer | Optional | `5` | How many times the example logs the sample values |
+
+#### Sample launch
+
+```bash
+ros2 launch sas_datalogger sas_datalogger_client_python_example_launch.py
+```
+
+> [!NOTE]
+> The Python example client executable creates **two** nodes (an rclcpp node and
+> an rclpy node). The `execution_times` parameter is declared on the rclpy node,
+> whose fixed code name is `sas_datalogger_client_example_py_rclpy`; the
+> corresponding block in `config/config.yaml` is keyed by that name.
