@@ -1,0 +1,21 @@
+# Shared configuration for the GUI docker scenario (docker/compose_gui.yml).
+#
+# This file backs both services in that compose file:
+#   * `sas_datalogger_gui`      -> the GUI node (plots the whitelisted values).
+#   * `sas_datalogger_client_py` -> the Python example client (logs values).
+#
+# Each block is keyed by the ROS node name, so each node picks up only its own
+# block. The values that were previously passed as launch arguments
+# (`whitelist:=...`, `execution_times:=...`) are now expressed here.
+
+# GUI node (scripts/sas_datalogger_gui_node.py)
+sas_datalogger_gui_node:
+  ros__parameters:
+    whitelist: ['value_double', 'another_value_double', 'v']
+
+# Python example client (scripts/sas_datalogger_client_example_py.py)
+# The `execution_times` parameter is declared on the rclpy node, whose fixed
+# code name is `sas_datalogger_client_example_py_rclpy`.
+sas_datalogger_client_example_py_rclpy:
+  ros__parameters:
+    execution_times: 50000
