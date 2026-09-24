@@ -41,7 +41,7 @@ PYBIND11_MODULE(_sas_datalogger, m) {
         py::arg("server_count") = 1,
         "Returns true if the client is connected to the datalogger server, false otherwise.");
 
-    dc.def("log",py::overload_cast<const std::string&, const Eigen::Ref<const MatrixXd>&>(&DC::log),"Logs a matrix or vector.");
+    dc.def("log",py::overload_cast<const std::string&, const Eigen::Ref<const Eigen::MatrixXd>&>(&DC::log),"Logs a matrix or vector.");
     dc.def("log",py::overload_cast<const std::string&, const std::vector<double>&>(&DC::log),"Logs a vector.");
     dc.def("log",py::overload_cast<const std::string&, const double&>(&DC::log),"Logs a scalar.");
     dc.def("log",py::overload_cast<const std::string&, const std::string&>(&DC::log),"Logs a string.");

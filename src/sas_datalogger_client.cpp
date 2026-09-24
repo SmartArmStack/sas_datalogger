@@ -38,7 +38,7 @@ bool DataloggerClient::is_enabled(int server_count) const
     return (int(publisher_log_->get_subscription_count()) >= server_count);
 }
 
-void DataloggerClient::log(const std::string& name, const Eigen::Ref<const MatrixXd>& value)
+void DataloggerClient::log(const std::string& name, const Eigen::Ref<const Eigen::MatrixXd>& value)
 {
     sas_msgs::msg::LogDatum msg;
 
