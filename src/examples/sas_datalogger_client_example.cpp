@@ -70,11 +70,11 @@ int main(int argc,char** argv)
 
         for (auto i = 0; i < 5; i++)
         {
-            MatrixXd A(3,4); A << 1,2,3,4,5,6,7,8,9,10,11,12;
+            Eigen::MatrixXd A(3,4); A << 1,2,3,4,5,6,7,8,9,10,11,12;
             datalogger_client.log("A",A);
             datalogger_client.log("two_A",A+A);
 
-            VectorXd v(5); v << 1,5,10,15,20;
+            Eigen::VectorXd v(5); v << 1,5,10,15,20;
             datalogger_client.log("v",v);
             datalogger_client.log("two_v",v+v);
 
