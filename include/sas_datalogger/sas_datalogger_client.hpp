@@ -30,7 +30,6 @@
 
 #include <eigen3/Eigen/Dense>
 
-using namespace Eigen;
 
 namespace sas
 {
@@ -68,12 +67,12 @@ public:
     bool is_enabled(int server_count=1) const;
 
     /**
-     * @brief Log a matrix (MatrixXd) or vector (VectorXd) value under the given name.
+     * @brief Log a matrix (Eigen::MatrixXd) or vector (Eigen::VectorXd) value under the given name.
      *
      * @param name Key/name under which the value will be logged.
-     * @param value the Eigen::Ref<const MatrixXd> value to log.
+     * @param value the Eigen::Ref<const Eigen::MatrixXd> value to log.
      */
-    void log(const std::string& name, const Eigen::Ref<const MatrixXd>& value);
+    void log(const std::string& name, const Eigen::Ref<const Eigen::MatrixXd>& value);
 
     /**
      * @brief Log a std::vector<double> value under the given name.
