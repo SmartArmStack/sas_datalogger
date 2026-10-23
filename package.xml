@@ -13,6 +13,20 @@
   <depend>sas_core</depend>
   <depend>sas_msgs</depend>
   <depend>rclcpp</depend>
+  <depend>eigen</depend>
+
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>rcl_interfaces</exec_depend>
+  <exec_depend>ament_index_python</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>python3-scipy</exec_depend>
+  <exec_depend>python3-pyqt6</exec_depend>
+  <exec_depend>python3-pyqtgraph</exec_depend>
+
+  <!-- qdarktheme (imported by scripts/sas_datalogger_gui_node.py) has no
+       rosdep key; install from PyPI: pip install pyqtdarktheme. -->
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
