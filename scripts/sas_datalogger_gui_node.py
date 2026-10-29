@@ -31,6 +31,7 @@ import rclpy
 from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QApplication, QGridLayout, QHBoxLayout, QMainWindow, QWidget
 from rcl_interfaces.msg import ParameterDescriptor, ParameterType
+from rclpy.executors import ExternalShutdownException
 from rclpy.signals import SignalHandlerOptions
 from sas_datalogger.realtime_graph import RealtimeGraph
 
@@ -84,7 +85,12 @@ class DataloggerWindow(QMainWindow):
         self.datalogger_spin_thread.start()
 
     def spin(self):
-        rclpy.spin(self.datalogger)
+        try:
+            rclpy.spin(self.datalogger)
+        except (KeyboardInterrupt, ExternalShutdownException):
+            pass
+        except Exception as e:
+            print(e)
 
     def _timer_callback(self):
         try:
