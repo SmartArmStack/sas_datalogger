@@ -33,6 +33,7 @@ from PyQt6.QtWidgets import QApplication, QGridLayout, QHBoxLayout, QMainWindow,
 from rcl_interfaces.msg import ParameterDescriptor, ParameterType
 from rclpy.executors import ExternalShutdownException
 from rclpy.signals import SignalHandlerOptions
+from rclpy.utilities import try_shutdown
 from sas_datalogger.realtime_graph import RealtimeGraph
 
 from sas_datalogger.sas_datalogger import SASDatalogger
@@ -43,7 +44,7 @@ def sigint_handler(*args):
     # try_shutdown(), not rclpy.shutdown(): shutdown() raises when the
     # context is already down (e.g. second Ctrl-C) and rclpy shuts the
     # context down itself; try_shutdown still wakes the spin thread.
-    rclpy.try_shutdown()
+    try_shutdown()
 
 class DataloggerWindow(QMainWindow):
     def __init__(self,
@@ -64,7 +65,8 @@ class DataloggerWindow(QMainWindow):
             (
                 type=ParameterType.PARAMETER_STRING_ARRAY
             ))
-        self.whitelist: list[str] | None = self.datalogger.get_parameter('whitelist').get_parameter_value().string_array_value
+        raw_whitelist = self.datalogger.get_parameter('whitelist').get_parameter_value().string_array_value
+        self.whitelist: list[str] | None = list(raw_whitelist) if raw_whitelist is not None else None
         if self.whitelist == [' ']:
             self.whitelist = None
             print("Whitelist empty, plotting all values in datalogger topic.")

@@ -26,6 +26,7 @@ Provides a convenience wrapper around ``pyqtgraph`` to display a
 streaming scalar signal with an internal fixed-size queue.
 """
 
+from collections.abc import Sized
 from queue import Queue
 
 import numpy as np
@@ -41,7 +42,7 @@ class RealtimeGraph:
 
     def __init__(self,
                  title: str,
-                 lims: tuple[float, float]=[0,0],
+                 lims: tuple[float, float]=(0.0, 0.0),
                  max_queue_size: int=200):
         """Create the realtime plot.
 
@@ -58,39 +59,39 @@ class RealtimeGraph:
         self.lims = list(lims)
         self.plot_data = []
 
-    def update(self, datum: list[float]):
+    def update(self, datum: float | list[float]):
         """Append a new sample and refresh the plot.
 
         Args:
-            datum: Value to append to the internal buffer.
+            datum: Value (or list of values) to append to the internal buffer.
         """
-        try:
-            len(datum)
-        except TypeError:
-            datum = [datum]
+        if isinstance(datum, Sized):
+            values = list(datum)
+        else:
+            values = [datum]
 
         colors = ('w', 'g', 'r', 'c', 'm', 'y', 'k', 'b')
         # Initialize plot data lines on the first update
         if len(self.plot_data) == 0:
-            for i in range(len(datum)):
-                if len(datum) > 0:
+            for i in range(len(values)):
+                if len(values) > 0:
                     self.plot_data.append(self.plot.plot([],name=f"{i}",pen=colors[i % len(colors)]))
                 else:
                     self.plot_data.append(self.plot.plot([]))
         # Check that the new datum has the same length as previous data
-        if len(self.plot_data) != len(datum):
+        if len(self.plot_data) != len(values):
             raise ValueError("Data length cannot change in the same plot.")
 
         if self.queue.full():
             self.queue.get()
-        self.queue.put(datum)
+        self.queue.put(values)
 
         current_data = np.asarray(self.queue.queue)
 
         self.lims[0] = min(self.lims[0], np.min(current_data))
         self.lims[1] = max(self.lims[1], np.max(current_data))
 
-        for i in range(len(datum)):
+        for i in range(len(values)):
             self.plot_data[i].setData(np.linspace(0, 1, self.queue.qsize()), current_data[:, i])
 
         self.plot.setYRange(self.lims[0], self.lims[1])
