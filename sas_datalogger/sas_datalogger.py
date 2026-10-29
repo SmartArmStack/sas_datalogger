@@ -37,8 +37,6 @@ import datetime
 
 import numpy
 import scipy.io as sio
-
-import rclpy
 from rclpy.node import Node
 
 from sas_msgs.msg import LogDatum
@@ -72,8 +70,8 @@ class SASDatalogger(Node):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        filename = 'sas_log_{date:%Y_%m_%d_%H_%M_%S}.mat'.format(date=datetime.datetime.now())
-        print("Saving log to filename = '{}'.".format(filename))
+        filename = f'sas_log_{datetime.datetime.now():%Y_%m_%d_%H_%M_%S}.mat'
+        print(f"Saving log to filename = '{filename}'.")
         sio.savemat(filename, self.data)
 
     def save(self, filename: str):

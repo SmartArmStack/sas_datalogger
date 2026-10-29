@@ -22,24 +22,20 @@
 #   Author: Murilo M. Marinho, email: murilomarinho@ieee.org
 #
 # ################################################################
-from math import sqrt
 import signal
-import numpy as np
 import threading
 
+import numpy as np
+import qdarktheme
 import rclpy
+from PyQt6.QtCore import QTimer
+from PyQt6.QtWidgets import QApplication, QGridLayout, QHBoxLayout, QMainWindow, QWidget
+from rcl_interfaces.msg import ParameterDescriptor, ParameterType
 from rclpy.signals import SignalHandlerOptions
-
-from rcl_interfaces.msg import ParameterType, ParameterDescriptor
-
 from sas_datalogger.realtime_graph import RealtimeGraph
+
 from sas_datalogger.sas_datalogger import SASDatalogger
 
-from PyQt6.QtCore import QTimer
-from PyQt6.QtWidgets import QWidget, QApplication, QMainWindow, QHBoxLayout, QGridLayout
-
-import qdarktheme
-import pyqtgraph as pg
 
 def sigint_handler(*args):
     QApplication.quit()
@@ -67,7 +63,7 @@ class DataloggerWindow(QMainWindow):
         self.whitelist: list[str] | None = self.datalogger.get_parameter('whitelist').get_parameter_value().string_array_value
         if self.whitelist == [' ']:
             self.whitelist = None
-            print(f"Whitelist empty, plotting all values in datalogger topic.")
+            print("Whitelist empty, plotting all values in datalogger topic.")
         else:
             print(f"Whitelist: {self.whitelist}")
 

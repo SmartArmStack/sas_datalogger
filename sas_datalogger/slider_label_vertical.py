@@ -28,7 +28,7 @@ value labels used by the datalogger UI.
 """
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QWidget, QSlider, QVBoxLayout, QLabel
+from PyQt6.QtWidgets import QLabel, QSlider, QVBoxLayout, QWidget
 
 
 class SliderLabelVertical(QWidget):

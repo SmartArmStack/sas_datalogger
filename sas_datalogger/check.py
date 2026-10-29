@@ -1,5 +1,6 @@
-import numpy as np
 from queue import Queue
+
+import numpy as np
 
 q = Queue(maxsize=10)
 q.put([1,2,3])

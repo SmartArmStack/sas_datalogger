@@ -6,6 +6,7 @@ from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
+
 # Run the example "src/examples/sas_datalogger_client_example.cpp"
 def generate_launch_description():
     """Launch the C++ example datalogger client.

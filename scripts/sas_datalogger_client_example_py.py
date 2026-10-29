@@ -25,13 +25,12 @@
 
 # Author: Murilo M. Marinho, email: murilomarinho@ieee.org
 import numpy as np
-
 import rclpy
 from rclpy.node import Node
 
-from sas_datalogger import DataloggerClient
+from sas_common import rclcpp_init, rclcpp_Node, rclcpp_spin_some
 from sas_core import Clock
-from sas_common import rclcpp_init, rclcpp_Node, rclcpp_spin_some, rclcpp_shutdown
+from sas_datalogger import DataloggerClient
 
 
 def main(args=None):

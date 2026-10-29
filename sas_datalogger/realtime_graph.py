@@ -26,10 +26,11 @@ Provides a convenience wrapper around ``pyqtgraph`` to display a
 streaming scalar signal with an internal fixed-size queue.
 """
 
-import numpy as np
 from queue import Queue
-from PyQt6.QtWidgets import QWidget
+
+import numpy as np
 import pyqtgraph as pg
+
 
 class RealtimeGraph:
     """Realtime plotting class.

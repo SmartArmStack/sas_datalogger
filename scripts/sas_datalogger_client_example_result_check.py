@@ -23,9 +23,11 @@
 #
 # ################################################################
 
-import os
-import scipy.io
 import glob
+import os
+
+import scipy.io
+
 
 def main():
     current_working_directory = os.getcwd()
@@ -33,14 +35,14 @@ def main():
     print(filenames)
     filenames = glob.glob(rf"{current_working_directory}/*.mat")
     absolute_file_path = filenames[0]
-    print("Try to open file {}".format(absolute_file_path))
+    print(f"Try to open file {absolute_file_path}")
     mat = scipy.io.loadmat(absolute_file_path)
 
     if mat is not None:
         for key in mat:
-            print("For element = {}, the stored value was {}".format(key, mat[key]))
+            print(f"For element = {key}, the stored value was {mat[key]}")
             try:
-                print("With shape = {}".format(mat[key].shape))
+                print(f"With shape = {mat[key].shape}")
             except Exception:
                 pass
     else:
