@@ -40,7 +40,10 @@ from sas_datalogger.sas_datalogger import SASDatalogger
 
 def sigint_handler(*args):
     QApplication.quit()
-    rclpy.shutdown()
+    # try_shutdown(), not rclpy.shutdown(): shutdown() raises when the
+    # context is already down (e.g. second Ctrl-C) and rclpy shuts the
+    # context down itself; try_shutdown still wakes the spin thread.
+    rclpy.try_shutdown()
 
 class DataloggerWindow(QMainWindow):
     def __init__(self,
