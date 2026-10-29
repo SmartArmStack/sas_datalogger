@@ -71,7 +71,7 @@ class SASDatalogger(Node):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         filename = f'sas_log_{datetime.datetime.now():%Y_%m_%d_%H_%M_%S}.mat'
-        print(f"Saving log to filename = '{filename}'.")
+        self.get_logger().info(f"Saving log to filename = '{filename}'.")
         sio.savemat(filename, self.data)
 
     def save(self, filename: str):

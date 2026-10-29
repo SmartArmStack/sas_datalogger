@@ -23,6 +23,7 @@
 #
 # ################################################################
 import rclpy
+from rclpy.executors import ExternalShutdownException
 
 from sas_datalogger.sas_datalogger import SASDatalogger
 
@@ -34,8 +35,8 @@ def main(args=None):
         print("sas_datalogger_node ready. End it with CTRL+C.")
         try:
             rclpy.spin(sas_datalogger)
-        except KeyboardInterrupt:
-            print("sas_datalogger_node ended by user with CTRL+C.")
+        except (KeyboardInterrupt, ExternalShutdownException):
+            pass
         except Exception as e:
             print(e)
 
