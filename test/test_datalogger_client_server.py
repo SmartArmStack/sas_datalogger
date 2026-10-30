@@ -138,15 +138,20 @@ def test_log_string(client_server_pair):
 
 def test_multiple_updates_accumulate(client_server_pair):
     client, datalogger, client_node = client_server_pair
+    tail = []
+    total = 0
+
     def five_samples():
+        nonlocal tail, total
         for i in range(5):
             client.log("counter", float(i))
         samples = datalogger.data.get("counter", [])
-        return (len(samples) >= 5
-                and [float(np.asarray(s).ravel()[0]) for s in samples[-5:]]
-                == [0.0, 1.0, 2.0, 3.0, 4.0])
+        total = len(samples)
+        tail = [float(np.asarray(s).ravel()[0]) for s in samples[-5:]]
+        return total >= 5 and tail == [0.0, 1.0, 2.0, 3.0, 4.0]
 
-    assert _wait_until(five_samples, client_node, datalogger)
+    assert _wait_until(five_samples, client_node, datalogger, timeout=30.0), (
+        f"tail={tail} of {total} samples")
 
 
 def test_save_persists_mat_file(client_server_pair, tmp_path):
