@@ -28,9 +28,6 @@
   <!-- qdarktheme (imported by scripts/sas_datalogger_gui_node.py) has no
        rosdep key; install from PyPI: pip install pyqtdarktheme. -->
 
-  <test_depend>ament_copyright</test_depend>
-  <test_depend>ament_flake8</test_depend>
-  <test_depend>ament_pep257</test_depend>
   <test_depend>python3-pytest</test_depend>
 
   <export>
