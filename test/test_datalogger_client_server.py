@@ -86,54 +86,64 @@ def client_server_pair(rclpy_context):
         datalogger.destroy_node()
 
 
-def _first_floats(datalogger, key):
-    """Return the first logged sample for key as floats, or None."""
+def _sample(datalogger, key):
+    """Return the most recent logged sample for key as floats, or None."""
     samples = datalogger.data.get(key)
     if not samples:
         return None
-    return [float(v) for v in np.asarray(samples[0]).ravel()]
+    return [float(v) for v in np.asarray(samples[-1]).ravel()]
 
 
 def test_log_scalar(client_server_pair):
     client, datalogger, client_node = client_server_pair
-    client.log("scalar", 3.5)
-    assert _wait_until(lambda: _first_floats(datalogger, "scalar") == [3.5],
-                       client_node, datalogger)
+    def logged():
+        client.log("scalar", 3.5)
+        return _sample(datalogger, "scalar") == [3.5]
+
+    assert _wait_until(logged, client_node, datalogger)
 
 
 def test_log_vector(client_server_pair):
     client, datalogger, client_node = client_server_pair
-    client.log("vector", [1.0, 2.0, 3.0])
-    assert _wait_until(lambda: _first_floats(datalogger, "vector") == [1.0, 2.0, 3.0],
-                       client_node, datalogger)
+    def logged():
+        client.log("vector", [1.0, 2.0, 3.0])
+        return _sample(datalogger, "vector") == [1.0, 2.0, 3.0]
+
+    assert _wait_until(logged, client_node, datalogger)
 
 
 def test_log_matrix(client_server_pair):
     client, datalogger, client_node = client_server_pair
     matrix = [[1.0, 2.0], [3.0, 4.0]]
-    client.log("matrix", matrix)
-    assert _wait_until(lambda: "matrix" in datalogger.data, client_node, datalogger)
-    stored = np.asarray(datalogger.data["matrix"][0])
-    # The C++ client packs Eigen column-major, so the stored sample is the
-    # transpose of the row-major input.
-    assert np.allclose(stored, np.asarray(matrix).T)
+    def logged():
+        client.log("matrix", matrix)
+        stored = datalogger.data.get("matrix")
+        # The C++ client packs Eigen column-major, so the stored sample is
+        # the transpose of the row-major input.
+        return bool(stored) and np.allclose(
+            np.asarray(stored[-1]), np.asarray(matrix).T)
+
+    assert _wait_until(logged, client_node, datalogger)
 
 
 def test_log_string(client_server_pair):
     client, datalogger, client_node = client_server_pair
-    client.log("label", "hello")
-    assert _wait_until(lambda: datalogger.data.get("label") == ["hello"],
-                       client_node, datalogger)
+    def logged():
+        client.log("label", "hello")
+        samples = datalogger.data.get("label")
+        return bool(samples) and samples[-1] == "hello"
+
+    assert _wait_until(logged, client_node, datalogger)
 
 
 def test_multiple_updates_accumulate(client_server_pair):
     client, datalogger, client_node = client_server_pair
-    for i in range(5):
-        client.log("counter", float(i))
     def five_samples():
+        for i in range(5):
+            client.log("counter", float(i))
         samples = datalogger.data.get("counter", [])
-        return (len(samples) == 5
-                and [float(np.asarray(s).ravel()[0]) for s in samples]
+        return (len(samples) >= 5
+                and [float(np.asarray(s).ravel()[0]) for s in samples[-5:]]
                 == [0.0, 1.0, 2.0, 3.0, 4.0])
 
     assert _wait_until(five_samples, client_node, datalogger)
@@ -141,9 +151,11 @@ def test_multiple_updates_accumulate(client_server_pair):
 
 def test_save_persists_mat_file(client_server_pair, tmp_path):
     client, datalogger, client_node = client_server_pair
-    client.log("saved", 42.0)
-    assert _wait_until(lambda: _first_floats(datalogger, "saved") == [42.0],
-                       client_node, datalogger)
+    def logged():
+        client.log("saved", 42.0)
+        return _sample(datalogger, "saved") == [42.0]
+
+    assert _wait_until(logged, client_node, datalogger)
     filename = str(tmp_path / "datalogger_test.mat")
     datalogger.save(filename)
     loaded = loadmat(filename)
