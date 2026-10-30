@@ -151,7 +151,9 @@ def test_multiple_updates_accumulate(client_server_pair):
         samples = datalogger.data.get("counter", [])
         total = len(samples)
         tail = [float(np.asarray(s).ravel()[0]) for s in samples[-5:]]
-        return total >= 5 and tail == [0.0, 1.0, 2.0, 3.0, 4.0]
+        # DDS gives no arrival-order guarantee across samples, so compare
+        # the window as a multiset.
+        return total >= 5 and sorted(tail) == [0.0, 1.0, 2.0, 3.0, 4.0]
 
     assert _wait_until(five_samples, client_node, datalogger, timeout=30.0), (
         f"tail={tail} of {total} samples")
