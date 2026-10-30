@@ -145,6 +145,9 @@ def test_multiple_updates_accumulate(client_server_pair):
         nonlocal tail, total
         for i in range(5):
             client.log("counter", float(i))
+            # Pump between writes: back-to-back bursts get dropped by the
+            # DDS layer before the subscriber is drained.
+            _pump(client_node, datalogger)
         samples = datalogger.data.get("counter", [])
         total = len(samples)
         tail = [float(np.asarray(s).ravel()[0]) for s in samples[-5:]]
