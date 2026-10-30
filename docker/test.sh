@@ -4,6 +4,8 @@ cd /root/sas_datalogger_devel || exit 1
 ls .
 colcon build
 source install/setup.bash
+colcon test
+colcon test-result || exit 1
 timeout --foreground -s INT $TIMEOUT ros2 launch sas_datalogger sas_datalogger_launch.py &
 timeout -s INT $TIMEOUT ros2 launch sas_datalogger sas_datalogger_client_cpp_example_launch.py
 timeout --foreground -s INT $TIMEOUT ros2 launch sas_datalogger sas_datalogger_launch.py &
