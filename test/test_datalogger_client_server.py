@@ -80,10 +80,7 @@ def client_server_pair(rclpy_context):
     datalogger = SASDatalogger(node_name="datalogger_server_node")
     client = DataloggerClient(client_node)
     assert _wait_until(client.is_enabled, client_node, datalogger)
-    try:
-        yield client, datalogger, client_node
-    finally:
-        datalogger.destroy_node()
+    yield client, datalogger, client_node
 
 
 def _sample(datalogger, key):
