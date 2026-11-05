@@ -30,7 +30,6 @@
 
 #include <eigen3/Eigen/Dense>
 
-
 namespace sas
 {
 
@@ -42,13 +41,14 @@ namespace sas
  * It is intended for runtime logging and can also request saving logged
  * data to a file via the `save` method.
  */
-class DataloggerClient: private sas::Object
+class DataloggerClient : private sas::Object
 {
 private:
     //ros::ServiceClient sc_save;
     //sas_datalogger::Save     sm_save;
 
     rclcpp::Publisher<sas_msgs::msg::LogDatum>::SharedPtr publisher_log_;
+
 public:
     /**
      * @brief Construct a new DataloggerClient.
@@ -56,7 +56,7 @@ public:
      * @param node Shared pointer to the ROS2 node used for publishing.
      * @param queue_size Publisher queue size (default: 100).
      */
-    DataloggerClient(const rclcpp::Node::SharedPtr& node, const size_t &queue_size=100);
+    DataloggerClient(const rclcpp::Node::SharedPtr& node, const size_t& queue_size = 100);
 
     /**
      * @brief Check if the datalogger is enabled (publisher is valid).
@@ -64,7 +64,7 @@ public:
      * @return true when enabled and ready to publish messages.
      * @return false otherwise.
      */
-    bool is_enabled(int server_count=1) const;
+    bool is_enabled(int server_count = 1) const;
 
     /**
      * @brief Log a matrix (Eigen::MatrixXd) or vector (Eigen::VectorXd) value under the given name.
@@ -103,8 +103,7 @@ public:
      *
      * @param filename Path to the file where data should be saved.
      */
-    void save(const std::string &filename);
+    void save(const std::string& filename);
 };
 
-}
-
+}  // namespace sas

@@ -27,10 +27,10 @@
 namespace sas
 {
 
-DataloggerClient::DataloggerClient(const rclcpp::Node::SharedPtr& node, const size_t& queue_size):
-    sas::Object("sas::DataloggerClient")
+DataloggerClient::DataloggerClient(const rclcpp::Node::SharedPtr& node, const size_t& queue_size)
+    : sas::Object("sas::DataloggerClient")
 {
-    publisher_log_ = node->create_publisher<sas_msgs::msg::LogDatum>("/sas_datalogger/log",queue_size);
+    publisher_log_ = node->create_publisher<sas_msgs::msg::LogDatum>("/sas_datalogger/log", queue_size);
 }
 
 bool DataloggerClient::is_enabled(int server_count) const
@@ -44,7 +44,7 @@ void DataloggerClient::log(const std::string& name, const Eigen::Ref<const Eigen
 
     msg.name = name;
     msg.value = std::vector<double>(value.data(), value.data() + value.rows() * value.cols());
-    msg.layout = {int(value.rows()),int(value.cols())};
+    msg.layout = {int(value.rows()), int(value.cols())};
     msg.strvalue = std::string("");
 
     publisher_log_->publish(msg);
@@ -54,7 +54,7 @@ void DataloggerClient::log(const std::string& name, const std::vector<double>& v
 {
     sas_msgs::msg::LogDatum msg;
 
-    msg.name  = name;
+    msg.name = name;
     msg.value = value;
     msg.strvalue = std::string("");
 
@@ -69,7 +69,7 @@ void DataloggerClient::log(const std::string& name, const double& value)
     msg.value[0] = value;
     msg.strvalue = std::string("");
 
-    msg.name  = name;
+    msg.name = name;
 
     publisher_log_->publish(msg);
 }
@@ -85,4 +85,4 @@ void DataloggerClient::log(const std::string& name, const std::string& value)
     publisher_log_->publish(msg);
 }
 
-}
+}  // namespace sas
