@@ -81,10 +81,10 @@ class DataloggerWindow(QMainWindow):
 
         self.central_widget = QWidget()
         if self.whitelist is None:
-            self.layout = QHBoxLayout()
+            self.widget_layout = QHBoxLayout()
         else:
-            self.layout = QGridLayout()
-        self.central_widget.setLayout(self.layout)
+            self.widget_layout = QGridLayout()
+        self.central_widget.setLayout(self.widget_layout)
         self.setCentralWidget(self.central_widget)
 
         self.datalogger_spin_thread.start()
@@ -128,7 +128,7 @@ class DataloggerWindow(QMainWindow):
                     # print(f"Creating plot for: {key}. Valid datum = {datum}")
                     self.realtime_graphs_dict[key] = RealtimeGraph(key)
                     if self.whitelist is None:
-                        self.layout.addWidget(self.realtime_graphs_dict[key].plot)
+                        self.widget_layout.addWidget(self.realtime_graphs_dict[key].plot)
                     else:
                         count = len(self.realtime_graphs_dict) - 1  # Do not count the one we just created, because it's the one we're adding
                         total = len(self.whitelist)
@@ -136,7 +136,7 @@ class DataloggerWindow(QMainWindow):
                         row_max = int(total**(9.0/25.0))
                         row = int(count/row_max)
                         col = count%row_max
-                        self.layout.addWidget(self.realtime_graphs_dict[key].plot,row,col)
+                        self.widget_layout.addWidget(self.realtime_graphs_dict[key].plot,row,col)
                     self.realtime_graphs_dict[key].update(datum)
         except Exception as e:
             print(e)

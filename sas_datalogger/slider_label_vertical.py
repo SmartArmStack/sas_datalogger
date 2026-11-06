@@ -61,12 +61,12 @@ class SliderLabelVertical(QWidget):
         self.slider = QSlider(Qt.Orientation.Vertical)
         self.slider.setRange(slider_range[0], slider_range[1])
 
-        self.layout = QVBoxLayout()
-        self.layout.addWidget(self.description_label)
-        self.layout.addWidget(self.value_label)
-        self.layout.addWidget(self.slider)
+        self.widget_layout = QVBoxLayout()
+        self.widget_layout.addWidget(self.description_label)
+        self.widget_layout.addWidget(self.value_label)
+        self.widget_layout.addWidget(self.slider)
 
-        self.setLayout(self.layout)
+        self.setLayout(self.widget_layout)
 
     def set_value(self, value):
         """Set the slider's numeric value.
